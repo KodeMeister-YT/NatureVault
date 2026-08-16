@@ -1,7 +1,12 @@
+import { useMemo } from 'react';
 import { biodiversityCategories } from '../../data/biodiversityCategories';
 import type { BiodiversityCategory } from '../../types/observation';
+import type { BiomeDefinition } from '../../types/vault';
+import { BiodiversityProfileService, EDUCATIONAL_DATA_DISCLAIMER } from '../../services/BiodiversityProfileService';
 
 interface BiodiversityPanelProps {
+  biome: BiomeDefinition;
+  year: number;
   activeFilter: BiodiversityCategory | null;
   onSelectFilter: (category: BiodiversityCategory | null) => void;
   connectionsOn: boolean;
@@ -9,14 +14,32 @@ interface BiodiversityPanelProps {
 }
 
 export function BiodiversityPanel({
+  biome,
+  year,
   activeFilter,
   onSelectFilter,
   connectionsOn,
   onToggleConnections,
 }: BiodiversityPanelProps) {
+  const profile = useMemo(() => BiodiversityProfileService.computeProfile(biome, year), [biome, year]);
+
+  const categoryBreakdown = biodiversityCategories
+    .filter((cat) => profile.byCategory[cat.id] > 0)
+    .map((cat) => `${profile.byCategory[cat.id]} ${cat.label}`)
+    .join(', ');
+
   return (
     <div className="glass-panel pointer-events-auto absolute left-4 top-24 z-30 w-[min(90vw,280px)] rounded-2xl p-4 motion-safe:animate-fade-in-up sm:left-6">
       <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-offwhite/60">Biodiversity View</p>
+
+      <div className="mt-3 rounded-xl bg-white/5 p-3">
+        <p className="text-sm text-vault-offwhite/90">
+          {profile.totalSpecies} species represented
+          {categoryBreakdown ? ` — ${categoryBreakdown}` : ''}
+        </p>
+        <p className="mt-1.5 text-[10px] leading-snug text-vault-offwhite/45">{EDUCATIONAL_DATA_DISCLAIMER}</p>
+      </div>
+
       <div className="mt-3 grid grid-cols-2 gap-2">
         {biodiversityCategories.map((cat) => {
           const active = activeFilter === cat.id;

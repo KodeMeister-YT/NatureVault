@@ -256,22 +256,22 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
 
 ### Tier 4 — Biodiversity hierarchy backfill (remaining biomes)
 
-- [ ] 35. Backfill `trophicRole`/`habitat`/`diet`/`environmentalPressures` on Alpine, Freshwater Lake, Tropical Forest, Grassland/Savanna, and Desert/Coral Reef objects not already covered in their authoring tasks
+- [x] 35. Backfill `trophicRole`/`habitat`/`diet`/`environmentalPressures` on Alpine, Freshwater Lake, Tropical Forest, Grassland/Savanna, and Desert/Coral Reef objects not already covered in their authoring tasks
   - Ensure every `EnvironmentalObject` with a non-null `biodiversityCategory` across all 8 biomes has at least `trophicRole` and `habitat` populated.
   - _Requirements: 7.1, 7.2, 7.3_
 
-- [ ] 35.1 Unit test: biodiversity field coverage across all 8 biomes
+- [x] 35.1 Unit test: biodiversity field coverage across all 8 biomes
   - Iterate the `vaults` map; assert every object with non-null `biodiversityCategory` has a defined `trophicRole` and `habitat`.
   - _Requirements: 7.1, 7.2_
 
 ### Tier 5 — ObjectInspector panel richness
 
-- [ ] 36. Update `ObjectInspector.tsx` layout
+- [x] 36. Update `ObjectInspector.tsx` layout
   - Insert trophic-role badge, Habitat section, Diet section, Environmental pressures section in the order specified in design.md section 9, each conditionally rendered on field presence.
   - Extend the `kindLabel` map with all new `ObjectKind` values.
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 37. Update `BiodiversityPanel.tsx` with species-count summary
+- [x] 37. Update `BiodiversityPanel.tsx` with species-count summary
   - Add a summary card rendering `BiodiversityProfileService.computeProfile(biome, year)` output ("N species represented — X Plants, Y Birds...") plus the `EDUCATIONAL_DATA_DISCLAIMER`, above the existing category filter grid.
   - _Requirements: 7.6_
 

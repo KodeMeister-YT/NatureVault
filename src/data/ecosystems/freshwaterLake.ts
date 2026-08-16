@@ -69,6 +69,7 @@ export const freshwaterLakeVault: BiomeDefinition = {
       historicalChange: 'Summer water levels have dropped year over year as downstream irrigation withdrawals have increased.',
       relatedSpecies: ['Rainbow Trout', 'Osprey'],
       featureRadius: 18,
+      trophicRole: 'producer',
       habitat: 'Open freshwater lake basin',
       environmentalPressures: ['Downstream irrigation withdrawals', 'Seasonal water level drawdown'],
     },

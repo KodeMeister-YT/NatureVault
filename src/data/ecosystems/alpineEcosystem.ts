@@ -76,6 +76,7 @@ export const alpineEcosystemVault: BiomeDefinition = {
       description: 'A stream fed primarily by seasonal snowmelt from the peaks above.',
       ecologicalRole: 'Supports aquatic organisms and surrounding ecosystems, especially during dry summer months.',
       historicalChange: 'Peak flow now arrives earlier in the year, and late-summer flow has decreased.',
+      trophicRole: 'producer',
       habitat: 'Snowmelt-fed mountain stream channel',
       environmentalPressures: ['Earlier peak flow timing', 'Reduced late-summer flow'],
     },

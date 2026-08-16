@@ -249,6 +249,8 @@ export function VaultPage() {
 
       {isBiodiversityViewOn && (
         <BiodiversityPanel
+          biome={vault}
+          year={year}
           activeFilter={activeBiodiversityFilter}
           onSelectFilter={setBiodiversityFilter}
           connectionsOn={isConnectionsModeOn}

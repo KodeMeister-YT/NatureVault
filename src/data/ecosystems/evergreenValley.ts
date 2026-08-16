@@ -149,6 +149,7 @@ export const evergreenValleyVault: BiomeDefinition = {
         'Flow has decreased over the simulated period due to development, runoff, and changing precipitation.',
       relatedSpecies: ['Coho Salmon', 'River Otter'],
       featureRadius: 9,
+      trophicRole: 'producer',
       habitat: 'Shaded forest stream channel',
       environmentalPressures: ['Reduced flow from upstream development', 'Warmer water from lost streamside shade'],
     },
@@ -165,6 +166,7 @@ export const evergreenValleyVault: BiomeDefinition = {
       historicalChange:
         'The pond has shrunk in the simulated 2026 and 2050 states as the water table has dropped.',
       relatedSpecies: ['Pacific Chorus Frog'],
+      trophicRole: 'producer',
       habitat: 'Willow-ringed forest pond',
       environmentalPressures: ['Dropping water table', 'Reduced inflow from the creek'],
     },

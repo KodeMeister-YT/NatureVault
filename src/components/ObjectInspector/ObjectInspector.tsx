@@ -24,6 +24,27 @@ const kindLabel: Record<string, string> = {
   building: 'Human Structure',
   road: 'Road',
   path: 'Trail',
+  creek: 'Creek',
+  lake: 'Lake',
+  waterfall: 'Waterfall',
+  fern: 'Fern',
+  moss: 'Moss',
+  log: 'Fallen Log',
+  cactus: 'Cactus',
+  dryRiverbed: 'Dry Riverbed',
+  vine: 'Vine',
+  tropicalFlower: 'Tropical Flower',
+  canopyTree: 'Canopy Tree',
+  coral: 'Coral',
+  fishSchool: 'Fish School',
+  termiteMound: 'Termite Mound',
+};
+
+const trophicRoleLabel: Record<string, string> = {
+  producer: 'Producer',
+  'primary-consumer': 'Primary Consumer',
+  'secondary-consumer': 'Secondary Consumer',
+  decomposer: 'Decomposer',
 };
 
 export function ObjectInspector({ object, year, onClose, showConnections }: ObjectInspectorProps) {
@@ -43,6 +64,11 @@ export function ObjectInspector({ object, year, onClose, showConnections }: Obje
             {kindLabel[object.kind] ?? object.kind} {categoryMeta ? `· ${categoryMeta.emoji} ${categoryMeta.label}` : ''}
           </p>
           <h3 className="font-display text-xl text-vault-offwhite">{object.name}</h3>
+          {object.trophicRole && (
+            <span className="mt-1.5 inline-block rounded-full bg-vault-gold/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-vault-gold">
+              {trophicRoleLabel[object.trophicRole] ?? object.trophicRole}
+            </span>
+          )}
         </div>
         <button
           type="button"
@@ -65,10 +91,36 @@ export function ObjectInspector({ object, year, onClose, showConnections }: Obje
           <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-gold">Why it matters</p>
           <p className="mt-1 text-vault-offwhite/85">{object.ecologicalRole}</p>
         </section>
+
+        {object.habitat && (
+          <section>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-gold">Habitat</p>
+            <p className="mt-1 text-vault-offwhite/85">{object.habitat}</p>
+          </section>
+        )}
+
+        {object.diet && (
+          <section>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-gold">Diet</p>
+            <p className="mt-1 text-vault-offwhite/85">{object.diet}</p>
+          </section>
+        )}
+
         <section>
           <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-gold">What changed</p>
           <p className="mt-1 text-vault-offwhite/85">{object.historicalChange}</p>
         </section>
+
+        {object.environmentalPressures && object.environmentalPressures.length > 0 && (
+          <section>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-gold">Environmental pressures</p>
+            <ul className="mt-1.5 list-disc space-y-1 pl-4 text-vault-offwhite/85">
+              {object.environmentalPressures.map((pressure) => (
+                <li key={pressure}>{pressure}</li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {object.relatedSpecies && object.relatedSpecies.length > 0 && (
           <section>
