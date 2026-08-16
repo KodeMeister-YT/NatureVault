@@ -4,6 +4,20 @@ export const alpineEcosystemVault: VaultDefinition = {
   ecosystemId: 'alpine-ecosystem',
   name: 'Alpine Ecosystem',
   location: 'Cascade Range, Oregon',
+  terrain: {
+    kind: 'rolling-hills',
+    palette: { primary: '#3d5a34', secondary: '#6b6a45', shoreline: '#5a4a34', developed: '#54524a' },
+  },
+  water: { kind: 'pond-marsh', deepColor: '#2b5866', shallowColor: '#5f9aa0' },
+  atmosphere: {
+    skyTreatment: 'sky-and-clouds',
+    sun: { color: '#fff1d6', intensity: 2.4, position: [18, 14, 10] },
+    ambient: { color: '#cfe6df', intensity: 0.45 },
+    hemisphere: { skyColor: '#bcd8e8', groundColor: '#3c4a2e', intensity: 0.65 },
+    fog: { color: '#dce8de', near: 18, far: 55 },
+  },
+  cameraDefaults: { position: [0, 1.7, 9], target: [0, 1.3, -2], fov: 55, minDistance: 2.5, maxDistance: 32, maxPolarAngle: Math.PI / 2.05 },
+  style: { entries: [] },
   years: [
     {
       year: 2000,

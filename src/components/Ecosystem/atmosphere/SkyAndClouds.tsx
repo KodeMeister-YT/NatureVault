@@ -2,10 +2,16 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Sky } from '@react-three/drei';
-import { seededRange } from '../../utils/seededRandom';
+import { seededRange } from '../../../utils/seededRandom';
+import type { AtmosphereProfile } from '../../../types/biome';
+
+interface SkyAndCloudsProps {
+  profile: AtmosphereProfile;
+  developmentLevel?: number;
+}
 
 /** Simple drifting cloud blobs made of overlapping spheres, plus a sky dome. */
-export function SkyAndClouds({ developmentLevel = 0 }: { developmentLevel?: number }) {
+export function SkyAndClouds({ profile, developmentLevel = 0 }: SkyAndCloudsProps) {
   const groupRefs = useRef<THREE.Group[]>([]);
 
   const clouds = useMemo(
@@ -28,11 +34,17 @@ export function SkyAndClouds({ developmentLevel = 0 }: { developmentLevel?: numb
     });
   });
 
-  const turbidity = 2 + developmentLevel * 4;
+  // Turbidity/sun position now sourced from the active biome's atmosphere profile
+  // instead of hardcoded literals, so a desert's harsh sun and a coastal haze read
+  // differently without touching this component. A shorter fog.far (denser/hazier
+  // atmosphere) reads as higher base turbidity; developmentLevel still adds haze on
+  // top of that per-biome baseline.
+  const baseTurbidity = THREE.MathUtils.clamp(10 - profile.fog.far / 8, 1.5, 8);
+  const turbidity = baseTurbidity + developmentLevel * 3;
 
   return (
     <>
-      <Sky distance={450000} sunPosition={[10, 12, 8]} turbidity={turbidity} rayleigh={1.2} />
+      <Sky distance={450000} sunPosition={profile.sun.position} turbidity={turbidity} rayleigh={1.2} />
       {clouds.map((c, i) => (
         <group
           key={i}

@@ -2,7 +2,6 @@ import type { EnvironmentalObject } from '../../types/vault';
 import type { ObjectClickHandler } from '../../types/threeEvents';
 import { seededRange } from '../../utils/seededRandom';
 import { Tree } from './Tree';
-import { Water } from './Water';
 import { Rock } from './Rock';
 import { Mountain } from './Mountain';
 import { Building } from './Building';
@@ -18,7 +17,6 @@ import { Frog } from './Frog';
 interface EnvironmentalObjectRendererProps {
   object: EnvironmentalObject;
   vegetationDensity: number;
-  waterLevel: number;
   biodiversityLevel: number;
   developmentLevel: number;
   selected: boolean;
@@ -33,7 +31,6 @@ const WILDLIFE_KINDS = new Set(['bird', 'animal', 'frog']);
 export function EnvironmentalObjectRenderer({
   object,
   vegetationDensity,
-  waterLevel,
   biodiversityLevel,
   developmentLevel,
   selected,
@@ -70,34 +67,6 @@ export function EnvironmentalObjectRenderer({
           selected={selected}
           dimmed={dimmed}
           highlighted={highlighted}
-          {...commonHandlers}
-        />
-      );
-    case 'river':
-      return (
-        <Water
-          position={object.position}
-          radius={9}
-          irregularity={0.4}
-          waterLevel={waterLevel}
-          color="#2b5866"
-          shallowColor="#5f9aa0"
-          selected={selected}
-          dimmed={dimmed}
-          {...commonHandlers}
-        />
-      );
-    case 'pond':
-      return (
-        <Water
-          position={object.position}
-          radius={4.5}
-          irregularity={0.3}
-          waterLevel={waterLevel}
-          color="#336a72"
-          shallowColor="#6fa8ac"
-          selected={selected}
-          dimmed={dimmed}
           {...commonHandlers}
         />
       );

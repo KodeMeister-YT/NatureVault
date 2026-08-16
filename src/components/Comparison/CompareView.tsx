@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { VaultDefinition, VaultStateMetrics } from '../../types/vault';
-import { Terrain } from '../Ecosystem/Terrain';
-import { SkyAndClouds } from '../Ecosystem/SkyAndClouds';
-import { EnvironmentalObjectRenderer } from '../Ecosystem/EnvironmentalObjectRenderer';
+import { SceneComposition } from '../Ecosystem/SceneComposition';
 import type { CompareMode } from '../../store/useVaultSessionStore';
 
 interface CompareViewProps {
@@ -17,6 +15,7 @@ interface CompareViewProps {
   onClose: () => void;
 }
 
+/** Thin Canvas + OrbitControls wrapper around the shared SceneComposition, non-interactive. */
 function MiniScene({
   vault,
   year,
@@ -26,32 +25,9 @@ function MiniScene({
   year: number;
   metrics: VaultStateMetrics;
 }) {
-  const objects = vault.objects.filter((o) => o.presentInYears.includes(year));
-  const waterBodies = objects
-    .filter((o) => o.kind === 'river' || o.kind === 'pond')
-    .map((o) => ({ position: o.position, radius: o.kind === 'river' ? 9 : 4.5 }));
   return (
     <Canvas camera={{ position: [0, 4, 10], fov: 55 }} dpr={[1, 1.4]} shadows>
-      <directionalLight position={[18, 14, 10]} intensity={2.2} color="#fff1d6" castShadow />
-      <ambientLight intensity={0.45} color="#cfe6df" />
-      <hemisphereLight args={['#bcd8e8', '#3c4a2e', 0.65]} />
-      <SkyAndClouds developmentLevel={metrics.developmentLevel} />
-      <Terrain developmentLevel={metrics.developmentLevel} waterLevel={metrics.waterLevel} waterBodies={waterBodies} />
-      {objects.map((object) => (
-        <EnvironmentalObjectRenderer
-          key={object.id}
-          object={object}
-          vegetationDensity={metrics.vegetationDensity}
-          waterLevel={metrics.waterLevel}
-          biodiversityLevel={metrics.biodiversityLevel}
-          developmentLevel={metrics.developmentLevel}
-          selected={false}
-          highlighted={false}
-          dimmed={false}
-          onSelect={() => {}}
-          onHover={() => {}}
-        />
-      ))}
+      <SceneComposition biome={vault} year={year} metrics={metrics} interactive={false} />
       <OrbitControls
         enableDamping
         dampingFactor={0.08}

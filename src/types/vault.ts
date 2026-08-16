@@ -1,4 +1,5 @@
 import type { BiodiversityCategory } from './observation';
+import type { TerrainConfig, WaterConfig, AtmosphereProfile, CameraDefaults, BiomeStyle, TrophicRole } from './biome';
 
 export type ObjectKind =
   | 'tree'
@@ -11,11 +12,25 @@ export type ObjectKind =
   | 'fungi'
   | 'river'
   | 'pond'
+  | 'creek'
+  | 'lake'
+  | 'waterfall'
   | 'mountain'
   | 'rock'
   | 'building'
   | 'road'
-  | 'path';
+  | 'path'
+  | 'fern'
+  | 'moss'
+  | 'log'
+  | 'cactus'
+  | 'dryRiverbed'
+  | 'vine'
+  | 'tropicalFlower'
+  | 'canopyTree'
+  | 'coral'
+  | 'fishSchool'
+  | 'termiteMound';
 
 export interface EcosystemConnection {
   /** Ordered chain of nodes describing a simplified ecological relationship */
@@ -25,6 +40,8 @@ export interface EcosystemConnection {
 export interface EnvironmentalObject {
   id: string;
   kind: ObjectKind;
+  /** e.g. tree variant: 'conifer' | 'broadleaf' | 'palm' */
+  variant?: string;
   biodiversityCategory: BiodiversityCategory | null;
   name: string;
   /** Position in the 3D scene, in scene units */
@@ -36,6 +53,15 @@ export interface EnvironmentalObject {
   historicalChange: string;
   relatedSpecies?: string[];
   connection?: EcosystemConnection;
+
+  // --- NEW optional fields (additive, non-breaking) ---
+  trophicRole?: TrophicRole;
+  habitat?: string;
+  diet?: string;
+  environmentalPressures?: string[];
+  /** Radius/size hint used by Terrain's shoreline carving and by WaterFeatureRenderer; replaces
+   *  the previous hardcoded per-kind radius constants duplicated in VaultScene/CompareView. */
+  featureRadius?: number;
 }
 
 export interface VaultStateMetrics {
@@ -54,14 +80,24 @@ export interface VaultYearState {
   keyChanges: string[];
 }
 
-export interface VaultDefinition {
+export interface BiomeDefinition {
   ecosystemId: string;
   name: string;
   location: string;
   years: VaultYearState[];
   objects: EnvironmentalObject[];
   storyChapters: StoryChapter[];
+
+  // --- NEW biome config ---
+  terrain: TerrainConfig;
+  water: WaterConfig;
+  atmosphere: AtmosphereProfile;
+  cameraDefaults: CameraDefaults;
+  style: BiomeStyle;
 }
+
+/** @deprecated use BiomeDefinition — kept so existing imports keep compiling during migration. */
+export type VaultDefinition = BiomeDefinition;
 
 export interface StoryChapter {
   id: string;
