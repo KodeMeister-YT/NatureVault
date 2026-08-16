@@ -295,21 +295,21 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
 
 ### Tier 7 — Navigation audit and general polish
 
-- [ ] 39. Ecosystem card and route audit for all 8 biomes
+- [x] 39. Ecosystem card and route audit for all 8 biomes
   - Verify `EcosystemCard`'s `gradientByType` has an entry for every biome type including `savanna`, `tropical-forest`, `desert`, `lake`, `coral-reef` (whichever type keys are introduced by Tier 1-3 data files) — add missing entries.
   - Verify `/vault/:ecosystemId` resolves correctly for all 8 ids; verify `ArchivePage`/`MyVaultPage`/`ImpactPage`/`ProfilePanel` correctly list/link all 8 once explored.
   - _Requirements: 10.1, 10.2, 10.3_
 
-- [ ] 40. Author story chapters and loading-screen variety for the 4 new biomes
+- [x] 40. Author story chapters and loading-screen variety for the 4 new biomes
   - Add `storyChapters` (already required by `BiomeDefinition`, authored in Tier 2/3 tasks) — this task covers a final narrative-quality pass/edit rather than first authoring.
   - _Requirements: 6.8, 6.6, 6.9, 6.5_
 
-- [ ] 41. Manual end-to-end navigation checklist across all 8 biomes
+- [x] 41. Manual end-to-end navigation checklist across all 8 biomes
   - For each biome: Discover → card click → Vault entry → timeline drag across all years → Biodiversity View + each category filter → Object Inspector open for at least one object of each new `ObjectKind` present in that biome → Compare (split and swipe) with year-picker → Take It Outside (geolocation allowed and denied) → back to Discover/Archive.
   - Record and fix any dead-end control found during this pass.
   - _Requirements: 10.1, 10.4_
 
-- [ ] 42. Full build and test suite verification
+- [x] 42. Full build and test suite verification
   - Run `npm run build` (type-check + production build) and `npm run test` (Vitest suite including all PBT/unit tests added above); fix any failures before considering the feature complete.
   - _Requirements: all_
 

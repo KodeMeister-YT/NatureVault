@@ -129,7 +129,7 @@ export function VaultPage() {
   }
 
   if (isLoading) {
-    return <VaultLoadingScreen onDone={() => setIsLoading(false)} />;
+    return <VaultLoadingScreen vault={vault} onDone={() => setIsLoading(false)} />;
   }
 
   if (webglSupported === false) {
