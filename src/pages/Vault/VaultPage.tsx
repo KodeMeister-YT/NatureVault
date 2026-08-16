@@ -79,7 +79,7 @@ export function VaultPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const [minYear, maxYear] = useMemo(() => (vault ? VaultService.getMinMaxYear(vault) : [0, 0]), [vault]);
+  const [, maxYear] = useMemo(() => (vault ? VaultService.getMinMaxYear(vault) : [0, 0]), [vault]);
 
   const rawMetrics = useMemo(() => {
     if (!vault) return { vegetationDensity: 0, waterLevel: 0, biodiversityLevel: 0, developmentLevel: 0 };
@@ -288,15 +288,7 @@ export function VaultPage() {
       )}
 
       {compareMode !== 'off' && (
-        <CompareView
-          vault={vault}
-          leftYear={minYear}
-          rightYear={vault.years[1]?.year ?? maxYear}
-          leftMetrics={vault.years[0].metrics}
-          rightMetrics={vault.years[1]?.metrics ?? vault.years[0].metrics}
-          mode={compareMode}
-          onClose={() => setCompareMode('off')}
-        />
+        <CompareView vault={vault} mode={compareMode} onClose={() => setCompareMode('off')} />
       )}
 
       {showTakeItOutside && (

@@ -157,19 +157,19 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
 
 ### Tier 1 — Coastal Wetland flagship upgrade
 
-- [ ] 19. Author full biome config for Coastal Wetland
+- [x] 19. Author full biome config for Coastal Wetland
   - Replace the Tier-0 placeholder config in `coastalWetland.ts` with a real `terrain` (rolling-hills, wetland palette), `water` (`pond-marsh`), `atmosphere` (coastal haze fog, cooler light), `cameraDefaults`, and `style` per design.md's migration table.
   - _Requirements: 6.2_
 
-- [ ] 20. Expand Coastal Wetland timeline to 6 years
+- [x] 20. Expand Coastal Wetland timeline to 6 years
   - Expand `years` from `[1980, 2026, 2050]` to `[1980, 1995, 2010, 2026, 2035, 2050]` with authored `metrics`/`summary`/`keyChanges` for each new year, keeping the existing 1980/2026/2050 content as anchors and interpolating narratively (not just numerically) for 1995/2010/2035.
   - _Requirements: 6.2, 9.1_
 
-- [ ] 21. Backfill biodiversity hierarchy fields on Coastal Wetland objects
+- [x] 21. Backfill biodiversity hierarchy fields on Coastal Wetland objects
   - Add `trophicRole`, `habitat`, `diet` (where relevant), and `environmentalPressures` to every existing `EnvironmentalObject` in `coastalWetland.ts`.
   - _Requirements: 7.1, 7.2, 7.3, 6.2_
 
-- [ ] 22. Exercise CompareView year-picker against Coastal Wetland
+- [x] 22. Exercise CompareView year-picker against Coastal Wetland
   - Add the year-picker UI to `CompareView.tsx` (two `<select>` elements defaulting to `[minYear, maxYear]`), replacing direct `vault.years[0]`/`vault.years[1]` indexing with `resolveMetricsForYear` calls for both selected years.
   - Manually verify all 6 Coastal Wetland years are selectable on both sides.
   - _Requirements: 9.4_

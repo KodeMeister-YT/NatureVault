@@ -1,16 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { VaultDefinition, VaultStateMetrics } from '../../types/vault';
 import { SceneComposition } from '../Ecosystem/SceneComposition';
+import { resolveMetricsForYear } from '../../services/ScenarioService';
 import type { CompareMode } from '../../store/useVaultSessionStore';
 
 interface CompareViewProps {
   vault: VaultDefinition;
-  leftYear: number;
-  rightYear: number;
-  leftMetrics: VaultStateMetrics;
-  rightMetrics: VaultStateMetrics;
   mode: CompareMode;
   onClose: () => void;
 }
@@ -40,8 +37,18 @@ function MiniScene({
   );
 }
 
-export function CompareView({ vault, leftYear, rightYear, leftMetrics, rightMetrics, mode, onClose }: CompareViewProps) {
+export function CompareView({ vault, mode, onClose }: CompareViewProps) {
   const [swipePercent, setSwipePercent] = useState(50);
+
+  const years = useMemo(() => vault.years.map((y) => y.year), [vault]);
+  const minYear = years[0];
+  const maxYear = years[years.length - 1];
+
+  const [leftYear, setLeftYear] = useState(minYear);
+  const [rightYear, setRightYear] = useState(maxYear);
+
+  const leftMetrics = useMemo(() => resolveMetricsForYear(vault.years, leftYear), [vault, leftYear]);
+  const rightMetrics = useMemo(() => resolveMetricsForYear(vault.years, rightYear), [vault, rightYear]);
 
   return (
     <div className="absolute inset-0 z-40 bg-vault-charcoal">
@@ -59,6 +66,39 @@ export function CompareView({ vault, leftYear, rightYear, leftMetrics, rightMetr
         >
           Close
         </button>
+      </div>
+
+      <div className="glass-panel absolute left-1/2 top-16 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full px-4 py-2 text-xs">
+        <label className="flex items-center gap-1.5 text-vault-offwhite/70">
+          Left year
+          <select
+            aria-label="Left year"
+            value={leftYear}
+            onChange={(e) => setLeftYear(Number(e.target.value))}
+            className="rounded-md bg-white/10 px-2 py-1 text-vault-offwhite"
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex items-center gap-1.5 text-vault-offwhite/70">
+          Right year
+          <select
+            aria-label="Right year"
+            value={rightYear}
+            onChange={(e) => setRightYear(Number(e.target.value))}
+            className="rounded-md bg-white/10 px-2 py-1 text-vault-offwhite"
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       {mode === 'split' && (
