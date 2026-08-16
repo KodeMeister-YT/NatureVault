@@ -1,22 +1,32 @@
-import type { VaultDefinition } from '../../types/vault';
+import type { BiomeDefinition } from '../../types/vault';
 
-export const alpineEcosystemVault: VaultDefinition = {
+export const alpineEcosystemVault: BiomeDefinition = {
   ecosystemId: 'alpine-ecosystem',
   name: 'Alpine Ecosystem',
   location: 'Cascade Range, Oregon',
   terrain: {
-    kind: 'rolling-hills',
-    palette: { primary: '#3d5a34', secondary: '#6b6a45', shoreline: '#5a4a34', developed: '#54524a' },
+    kind: 'elevated-cliffs',
+    // Grey rock / sparse hardy meadow green / snow-adjacent pale tone, distinct from
+    // every other biome's palette (evergreen's deep conifer green, coastalWetland's
+    // muted marsh tones, desert's warm sand).
+    palette: { primary: '#5c6b4a', secondary: '#8b8d85', shoreline: '#c9d4d6', developed: '#6e6a5f' },
+    params: { cliffFaces: 4, elevationScale: 2.2 },
   },
   water: { kind: 'pond-marsh', deepColor: '#2b5866', shallowColor: '#5f9aa0' },
   atmosphere: {
     skyTreatment: 'sky-and-clouds',
-    sun: { color: '#fff1d6', intensity: 2.4, position: [18, 14, 10] },
-    ambient: { color: '#cfe6df', intensity: 0.45 },
-    hemisphere: { skyColor: '#bcd8e8', groundColor: '#3c4a2e', intensity: 0.65 },
-    fog: { color: '#dce8de', near: 18, far: 55 },
+    // Crisp, thin-air high-altitude light: sharp, bright, cool-toned sun with little
+    // atmospheric scattering, unlike desert's warm harsh sun or evergreen's dappled
+    // canopy light.
+    sun: { color: '#eef4ff', intensity: 2.9, position: [22, 20, 8] },
+    ambient: { color: '#dce8f2', intensity: 0.35 },
+    hemisphere: { skyColor: '#cfe0ea', groundColor: '#5c6b4a', intensity: 0.5 },
+    // Thin air means clearer, farther-reaching visibility than any other biome's fog.
+    fog: { color: '#e8f0f5', near: 26, far: 70 },
   },
-  cameraDefaults: { position: [0, 1.7, 9], target: [0, 1.3, -2], fov: 55, minDistance: 2.5, maxDistance: 32, maxPolarAngle: Math.PI / 2.05 },
+  // Perched partway up-slope, looking further up toward the ridge rather than
+  // straight ahead — a mountain vantage rather than a valley-floor approach.
+  cameraDefaults: { position: [0, 2.2, 11], target: [0, 2.8, -4], fov: 52, minDistance: 3, maxDistance: 36, maxPolarAngle: Math.PI / 2.15 },
   style: { entries: [] },
   years: [
     {
@@ -52,6 +62,9 @@ export const alpineEcosystemVault: VaultDefinition = {
       description: 'A high-elevation meadow of hardy wildflowers and low shrubs.',
       ecologicalRole: 'Provides forage for mountain wildlife and stabilizes thin mountain soils.',
       historicalChange: 'Meadow composition has shifted as warmer, drier conditions favor different plant species.',
+      trophicRole: 'producer',
+      habitat: 'High-elevation alpine meadow above the treeline',
+      environmentalPressures: ['Warming, drying conditions favoring different species', 'Shorter snow-free growing window'],
     },
     {
       id: 'alpine-stream',
@@ -63,6 +76,8 @@ export const alpineEcosystemVault: VaultDefinition = {
       description: 'A stream fed primarily by seasonal snowmelt from the peaks above.',
       ecologicalRole: 'Supports aquatic organisms and surrounding ecosystems, especially during dry summer months.',
       historicalChange: 'Peak flow now arrives earlier in the year, and late-summer flow has decreased.',
+      habitat: 'Snowmelt-fed mountain stream channel',
+      environmentalPressures: ['Earlier peak flow timing', 'Reduced late-summer flow'],
     },
     {
       id: 'alpine-goat-1',
@@ -74,6 +89,25 @@ export const alpineEcosystemVault: VaultDefinition = {
       description: 'A mountain goat navigating the rocky slopes above the meadow.',
       ecologicalRole: 'An indicator of alpine habitat quality and undisturbed terrain.',
       historicalChange: 'Range has shifted slightly upslope as lower elevations warm.',
+      trophicRole: 'primary-consumer',
+      habitat: 'Rocky alpine slopes above the meadow',
+      diet: 'Alpine grasses, sedges, and low shrubs',
+      environmentalPressures: ['Range shifting upslope as lower elevations warm', 'Reduced forage at traditional elevations'],
+    },
+    {
+      id: 'alpine-bird-1',
+      kind: 'bird',
+      biodiversityCategory: 'birds',
+      name: 'Gray-crowned Rosy-Finch',
+      position: [-2, 4, -5],
+      presentInYears: [2000, 2026, 2050],
+      description: 'A high-elevation finch that forages for insects stranded on snowfields and rocky slopes.',
+      ecologicalRole: 'One of the few birds that breeds at this elevation, linking snowfield insect life to the wider food web.',
+      historicalChange: 'Sightings have become less predictable as snowfield insect concentrations shift with earlier melt.',
+      trophicRole: 'secondary-consumer',
+      habitat: 'Rocky slopes and snowfield edges above treeline',
+      diet: 'Insects stranded on snow, seeds, and alpine plant matter',
+      environmentalPressures: ['Earlier snowmelt altering insect concentrations', 'Shrinking snowfield habitat'],
     },
     {
       id: 'alpine-rock-1',
@@ -85,6 +119,28 @@ export const alpineEcosystemVault: VaultDefinition = {
       description: 'A large boulder deposited by glacial movement long ago.',
       ecologicalRole: 'Provides shelter for small alpine mammals and a marker of the area\u2019s glacial history.',
       historicalChange: 'Unchanged across the simulated years.',
+    },
+    {
+      id: 'alpine-rock-2',
+      kind: 'rock',
+      biodiversityCategory: null,
+      name: 'Talus Slab',
+      position: [6, 1, 1],
+      presentInYears: [2000, 2026, 2050],
+      description: 'A flat slab of broken rock at the base of a talus slope.',
+      ecologicalRole: 'Offers cover for small mammals moving between rocky outcrops.',
+      historicalChange: 'Unchanged across the simulated years.',
+    },
+    {
+      id: 'alpine-peak-backdrop',
+      kind: 'mountain',
+      biodiversityCategory: null,
+      name: 'Distant Summit',
+      position: [3, 0, -24],
+      presentInYears: [2000, 2026, 2050],
+      description: 'A snow-capped peak rising beyond the meadow, visible from across the elevated basin. The walkable ground here is the primary elevation cue — this peak simply frames the scene from a distance.',
+      ecologicalRole: 'Feeds the alpine stream through seasonal snowmelt and shapes local weather over the basin.',
+      historicalChange: 'Snowpack on this peak has receded and now melts earlier in the season.',
     },
   ],
   storyChapters: [

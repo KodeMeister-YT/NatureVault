@@ -5,6 +5,7 @@ import { alpineEcosystemVault } from './alpineEcosystem';
 import { urbanGreenSpaceVault } from './urbanGreenSpace';
 import { desertVault } from './desert';
 import { coralReefVault } from './coralReef';
+import { freshwaterLakeVault } from './freshwaterLake';
 
 export const vaults: Record<string, VaultDefinition> = {
   'evergreen-valley': evergreenValleyVault,
@@ -13,6 +14,7 @@ export const vaults: Record<string, VaultDefinition> = {
   'urban-green-space': urbanGreenSpaceVault,
   desert: desertVault,
   'coral-reef': coralReefVault,
+  'freshwater-lake': freshwaterLakeVault,
 };
 
 export const getVaultByEcosystemId = (id: string): VaultDefinition | undefined => vaults[id];

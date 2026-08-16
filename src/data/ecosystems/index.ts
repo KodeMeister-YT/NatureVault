@@ -104,6 +104,23 @@ export const ecosystems: Ecosystem[] = [
       { label: 'Biodiversity Index', value: 50, unit: '%' },
     ],
   },
+  {
+    id: 'freshwater-lake',
+    name: 'Freshwater Lake',
+    type: 'lake',
+    typeLabel: 'Lake Ecosystem',
+    location: 'Cobalt Lake, Central Oregon',
+    description:
+      'A calm freshwater lake ringed by shoreline forest, where decades of downstream water withdrawal are slowly reshaping the shore.',
+    availableYears: [1990, 2010, 2026, 2050],
+    heroImage: 'lake',
+    emoji: '🏞️',
+    environmentalIndicators: [
+      { label: 'Water Level', value: 62, unit: '%' },
+      { label: 'Shoreline Vegetation', value: 60, unit: '%' },
+      { label: 'Biodiversity Index', value: 52, unit: '%' },
+    ],
+  },
 ];
 
 export const getEcosystemById = (id: string): Ecosystem | undefined =>

@@ -217,15 +217,15 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
 
 ### Tier 3 — Remaining biomes (structurally complete, simpler)
 
-- [ ] 29. Upgrade `alpineEcosystem.ts`: real elevation
+- [x] 29. Upgrade `alpineEcosystem.ts`: real elevation
   - Set `terrain.kind: 'elevated-cliffs'` with appropriate `params`; keep the existing `Mountain` object as a distant backdrop only (not the primary elevation cue); apply real `atmosphere`/`cameraDefaults`/`style`.
   - _Requirements: 6.4_
 
-- [ ] 30. Create `LakeShoreline`-based `freshwaterLake.ts`
+- [x] 30. Create `LakeShoreline`-based `freshwaterLake.ts`
   - `terrain.kind: 'flat-grassland'` near shore, `water.kind: 'lake-shoreline'` with a larger `featureRadius` than existing pond/river features, reusing the existing `Tree`/`Rock`/`Bird`/`Animal`/`Fungi` roster, full biodiversity-hierarchy fields, timeline, story chapters.
   - _Requirements: 6.7, 6.1_
 
-- [ ] 30.1 Unit test: Freshwater Lake featureRadius exceeds existing pond radius
+- [x] 30.1 Unit test: Freshwater Lake featureRadius exceeds existing pond radius
   - Assert the lake object's `featureRadius` is greater than the largest `featureRadius`/default radius used by any existing pond object, confirming visual distinction from wetland marsh.
   - _Requirements: 6.7_
 

@@ -6,7 +6,8 @@ export type EcosystemType =
   | 'alpine'
   | 'urban-green-space'
   | 'desert'
-  | 'coral-reef';
+  | 'coral-reef'
+  | 'lake';
 
 export interface EnvironmentalIndicator {
   label: string;
