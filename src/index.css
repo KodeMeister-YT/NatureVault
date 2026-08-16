@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-sans: "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+
+  --color-vault-forest: #14251c;
+  --color-vault-forest-deep: #0a1510;
+  --color-vault-sage: #7c9070;
+  --color-vault-sage-light: #a8bb9c;
+  --color-vault-offwhite: #f4f1e9;
+  --color-vault-charcoal: #1b1b1d;
+  --color-vault-charcoal-soft: #26272a;
+  --color-vault-earth: #8a6f4e;
+  --color-vault-water: #4a7c8c;
+  --color-vault-sky: #cfe0dd;
+  --color-vault-gold: #d8b872;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-drift: drift 40s linear infinite;
+  --animate-fade-in: fade-in 0.6s ease-out both;
+  --animate-fade-in-up: fade-in-up 0.8s ease-out both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes drift {
+  0% { transform: translateX(-10%); }
+  100% { transform: translateX(110%); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-vault-charcoal);
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-vault-offwhite);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-vault-charcoal);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-vault-sage);
+  border-radius: 8px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessible focus states */
+:focus-visible {
+  outline: 2px solid var(--color-vault-gold);
+  outline-offset: 2px;
+}
+
+.glass-panel {
+  background: rgba(20, 37, 28, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(168, 187, 156, 0.18);
+}

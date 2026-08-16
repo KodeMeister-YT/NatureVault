@@ -1,0 +1,78 @@
+import type { Ecosystem } from '../../types/ecosystem';
+
+export const ecosystems: Ecosystem[] = [
+  {
+    id: 'evergreen-valley',
+    name: 'Pacific Northwest Forest',
+    type: 'temperate-forest',
+    typeLabel: 'Temperate Forest',
+    location: 'Evergreen Valley, Oregon',
+    description:
+      'A continuous conifer forest carved by a winding river, transformed over three decades by roads, development, and shifting rainfall.',
+    availableYears: [1995, 2026, 2050],
+    heroImage: 'forest',
+    emoji: '🌲',
+    featured: true,
+    environmentalIndicators: [
+      { label: 'Forest Coverage', value: 62, unit: '%' },
+      { label: 'Water Quality', value: 58, unit: '%' },
+      { label: 'Biodiversity Index', value: 55, unit: '%' },
+    ],
+  },
+  {
+    id: 'coastal-wetland',
+    name: 'Coastal Wetland',
+    type: 'wetland',
+    typeLabel: 'Wetland Ecosystem',
+    location: 'Siuslaw Estuary, Oregon Coast',
+    description:
+      'A tidal wetland that filters runoff and shelters migratory birds, gradually reshaped by drainage and coastal development.',
+    availableYears: [1980, 2026, 2050],
+    heroImage: 'wetland',
+    emoji: '🌊',
+    environmentalIndicators: [
+      { label: 'Wetland Area', value: 47, unit: '%' },
+      { label: 'Water Quality', value: 52, unit: '%' },
+      { label: 'Biodiversity Index', value: 60, unit: '%' },
+    ],
+  },
+  {
+    id: 'alpine-ecosystem',
+    name: 'Alpine Ecosystem',
+    type: 'alpine',
+    typeLabel: 'Mountain Environment',
+    location: 'Cascade Range, Oregon',
+    description:
+      'A high-elevation ecosystem where receding snowpack and treeline shifts are reshaping alpine meadows and streams.',
+    availableYears: [2000, 2026, 2050],
+    heroImage: 'alpine',
+    emoji: '🏔️',
+    environmentalIndicators: [
+      { label: 'Snowpack', value: 41, unit: '%' },
+      { label: 'Alpine Vegetation', value: 66, unit: '%' },
+      { label: 'Biodiversity Index', value: 58, unit: '%' },
+    ],
+  },
+  {
+    id: 'urban-green-space',
+    name: 'Urban Green Space',
+    type: 'urban-green-space',
+    typeLabel: 'Urban Ecosystem',
+    location: 'Riverside Commons, Portland',
+    description:
+      'A pocket of urban nature squeezed between roads and buildings, offering a glimpse of what city ecosystems can become.',
+    availableYears: [2005, 2026, 2050],
+    heroImage: 'urban',
+    emoji: '🌳',
+    environmentalIndicators: [
+      { label: 'Canopy Cover', value: 38, unit: '%' },
+      { label: 'Green Space', value: 44, unit: '%' },
+      { label: 'Biodiversity Index', value: 40, unit: '%' },
+    ],
+  },
+];
+
+export const getEcosystemById = (id: string): Ecosystem | undefined =>
+  ecosystems.find((e) => e.id === id);
+
+export const featuredEcosystem = ecosystems.find((e) => e.featured) ?? ecosystems[0];
