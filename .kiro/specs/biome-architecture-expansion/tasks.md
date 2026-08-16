@@ -277,19 +277,19 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
 
 ### Tier 6 — Timeline polish
 
-- [ ] 38. Generalize `Timeline.tsx` tick-label rendering
+- [x] 38. Generalize `Timeline.tsx` tick-label rendering
   - When `years.length > 5`, render only first/last/currently-selected year as visible text labels while keeping all years as draggable/snappable/tappable stops (via `<datalist>`/range `step` behavior already in place); verify no change needed for `min`/`max`/nearest-snap logic per design.md's Timeline review.
   - _Requirements: 9.1, 9.2_
 
-- [ ] 38.1 Unit test: Timeline snap-to-nearest works for 7-element years array
+- [x] 38.1 Unit test: Timeline snap-to-nearest works for 7-element years array
   - If a lightweight component test harness is feasible with the newly-added Vitest setup, simulate a range input change and assert the nearest-year snap logic selects the correct year for a 7-year array; otherwise document as a manual QA step in the integration checklist (Tier 7).
   - _Requirements: 9.1_
 
-- [ ] 38.2 Unit test: ScenarioService generalizes to N years (regression guard)
+- [x] 38.2 Unit test: ScenarioService generalizes to N years (regression guard)
   - Assert `resolveMetricsForYear`/`lerpMetrics`/`applyScenario` behave correctly for 2-, 3-, and 7-element `years` arrays (confirming design.md's "no changes required" claim holds under test).
   - _Requirements: 9.3_
 
-- [ ] 38.3 PBT: applyScenario metrics stay in [0,1] (P2)
+- [x] 38.3 PBT: applyScenario metrics stay in [0,1] (P2)
   - Generate random baseline metrics and random scenario modifiers; assert `applyScenario` output is always within `[0,1]^4`.
   - _Requirements: 9.3_
 
