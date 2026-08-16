@@ -201,17 +201,17 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
   - Assert `coralReefVault.objects` contains no object with `kind` in `{tree, canopyTree, building, road, path, cactus}`.
   - _Requirements: 6.9, 3.5_
 
-- [ ] 27. Create new primitives: `Fern`, `MossPatch`, `FallenLog`
+- [x] 27. Create new primitives: `Fern`, `MossPatch`, `FallenLog`
   - Follow existing primitive pattern; `Fern`/`MossPatch` can reuse `MeadowPatch`'s instancing approach with different geometry/color, `FallenLog` a simple elongated cylinder like `Tree`'s trunk.
   - _Requirements: 6.3_
 
-- [ ] 28. Upgrade `evergreenValley.ts`: creek + forest floor detail
+- [x] 28. Upgrade `evergreenValley.ts`: creek + forest floor detail
   - Replace the existing `river-main` (`kind: 'river'`) object with a `creek` object using `CreekStream`; set `water.kind: 'creek-stream'`.
   - Add `fern`, `moss`, `log` objects with biodiversity-hierarchy fields.
   - Apply real biome config (terrain/atmosphere/cameraDefaults/style) replacing the Tier-0 placeholder.
   - _Requirements: 6.3_
 
-- [ ] 28.1 Unit test: Evergreen Valley has no river/pond objects post-migration
+- [x] 28.1 Unit test: Evergreen Valley has no river/pond objects post-migration
   - Assert `evergreenValleyVault.objects` contains no object with `kind` in `{river, pond}` and at least one `creek` object.
   - _Requirements: 6.3_
 

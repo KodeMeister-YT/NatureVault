@@ -1,22 +1,32 @@
-import type { VaultDefinition } from '../../types/vault';
+import type { BiomeDefinition } from '../../types/vault';
 
-export const evergreenValleyVault: VaultDefinition = {
+export const evergreenValleyVault: BiomeDefinition = {
   ecosystemId: 'evergreen-valley',
   name: 'Evergreen Valley',
   location: 'Oregon, Pacific Northwest',
   terrain: {
     kind: 'rolling-hills',
-    palette: { primary: '#3d5a34', secondary: '#6b6a45', shoreline: '#5a4a34', developed: '#54524a' },
+    // Deep conifer-forest green / mossy understory palette, tuned to read as a lush
+    // temperate forest — distinct from coastalWetland's duller marsh-and-mud tones
+    // (#4c5a3a/#8a7d47/#3a3226) and desert's warm sand palette (#c9a877/#a9855a).
+    palette: { primary: '#294f2a', secondary: '#5c6b3e', shoreline: '#3f3626', developed: '#585449' },
   },
-  water: { kind: 'pond-marsh', deepColor: '#2b5866', shallowColor: '#5f9aa0' },
+  water: { kind: 'creek-stream', deepColor: '#2b5866', shallowColor: '#5f9aa0' },
   atmosphere: {
     skyTreatment: 'sky-and-clouds',
-    sun: { color: '#fff1d6', intensity: 2.4, position: [18, 14, 10] },
-    ambient: { color: '#cfe6df', intensity: 0.45 },
-    hemisphere: { skyColor: '#bcd8e8', groundColor: '#3c4a2e', intensity: 0.65 },
-    fog: { color: '#dce8de', near: 18, far: 55 },
+    // Dappled canopy light: warm green-gold sun filtered through fir/cedar cover,
+    // rather than the open coastal-haze light of coastalWetland or the harsh bright
+    // sun of desert.
+    sun: { color: '#d8e8a0', intensity: 2.0, position: [10, 16, 8] },
+    ambient: { color: '#a8c9a0', intensity: 0.4 },
+    hemisphere: { skyColor: '#9fc2b0', groundColor: '#2f4a28', intensity: 0.55 },
+    // Denser, cooler, greener near-fog than any other authored biome — reflects a
+    // shaded forest floor rather than open coastal haze (coastalWetland: #c9d6d2/10/38)
+    // or clear dry desert air (desert: #f0e0b8/30/85).
+    fog: { color: '#3a4a36', near: 12, far: 40 },
   },
-  cameraDefaults: { position: [0, 1.7, 9], target: [0, 1.3, -2], fov: 55, minDistance: 2.5, maxDistance: 32, maxPolarAngle: Math.PI / 2.05 },
+  // Forest-approach, eye-level vantage looking down a gentle slope toward the creek.
+  cameraDefaults: { position: [0, 1.6, 8], target: [0, 1.4, -3], fov: 56, minDistance: 2.5, maxDistance: 30, maxPolarAngle: Math.PI / 2.05 },
   style: { entries: [] },
   years: [
     {
@@ -29,10 +39,10 @@ export const evergreenValleyVault: VaultDefinition = {
         developmentLevel: 0.05,
       },
       summary:
-        'A continuous forest canopy covers the valley. The river runs high and clear, and wildlife moves freely across an unbroken habitat.',
+        'A continuous forest canopy covers the valley. Fernbrook Creek runs high and clear, and wildlife moves freely across an unbroken habitat.',
       keyChanges: [
         'Dense, continuous forest canopy',
-        'Healthy, high-flow river',
+        'Healthy, high-flow creek',
         'Minimal human infrastructure',
         'Abundant wildlife corridors',
       ],
@@ -47,11 +57,11 @@ export const evergreenValleyVault: VaultDefinition = {
         developmentLevel: 0.45,
       },
       summary:
-        'Roads and scattered development have fragmented the forest. The river runs lower, and wildlife habitat has become patchier.',
+        'Roads and scattered development have fragmented the forest. The creek runs lower, and wildlife habitat has become patchier.',
       keyChanges: [
         'Reduced forest coverage',
         'Expanded roads and a small settlement',
-        'Reduced river water level',
+        'Reduced creek water level',
         'Fragmented wildlife habitat',
       ],
     },
@@ -88,6 +98,9 @@ export const evergreenValleyVault: VaultDefinition = {
         'Tree cover in this area has declined in the simulated scenario as roads and development expanded through the mid-2020s.',
       relatedSpecies: ['Northern Spotted Owl', 'Douglas Squirrel'],
       connection: { chain: ['Forest', 'Bird habitat', 'Seed dispersal', 'Plant regeneration'] },
+      trophicRole: 'producer',
+      habitat: 'Mature conifer forest edge',
+      environmentalPressures: ['Canopy loss from nearby road construction', 'Fragmentation from development'],
     },
     {
       id: 'tree-douglas-fir-2',
@@ -102,6 +115,9 @@ export const evergreenValleyVault: VaultDefinition = {
       historicalChange:
         'This stand has thinned over time as the surrounding canopy has opened up.',
       relatedSpecies: ['Douglas Squirrel'],
+      trophicRole: 'producer',
+      habitat: 'Western ridge conifer stand',
+      environmentalPressures: ['Canopy thinning', 'Soil destabilization on the slope'],
     },
     {
       id: 'tree-cedar-1',
@@ -110,25 +126,31 @@ export const evergreenValleyVault: VaultDefinition = {
       name: 'Western Red Cedar',
       position: [4, 0, -7],
       presentInYears: [1995, 2026],
-      description: 'A large cedar near the riverbank, thriving in the moist soil close to water.',
+      description: 'A large cedar near the creek bank, thriving in the moist soil close to water.',
       ecologicalRole:
-        'Cedars near waterways help stabilize banks and provide shade that keeps river temperatures cool for aquatic life.',
+        'Cedars near waterways help stabilize banks and provide shade that keeps creek temperatures cool for aquatic life.',
       historicalChange:
-        'This cedar and others near the bank were among the first lost as development reached the river corridor.',
+        'This cedar and others near the bank were among the first lost as development reached the creek corridor.',
+      trophicRole: 'producer',
+      habitat: 'Moist soil along the creek bank',
+      environmentalPressures: ['Bank clearing from development', 'Loss of streamside shade'],
     },
     {
-      id: 'river-main',
-      kind: 'river',
+      id: 'creek-main',
+      kind: 'creek',
       biodiversityCategory: 'water',
-      name: 'Evergreen River',
+      name: 'Fernbrook Creek',
       position: [0, 0, 0],
       presentInYears: [1995, 2026, 2050],
       description:
-        'The river that runs the length of the valley, feeding the pond and surrounding wetland soil.',
+        'A narrow, gently meandering stream that runs the length of the valley, feeding the pond and keeping the surrounding forest floor moist.',
       ecologicalRole: 'Supports aquatic organisms and surrounding ecosystems.',
       historicalChange:
-        'Water level and flow have decreased over the simulated period due to development, runoff, and changing precipitation.',
+        'Flow has decreased over the simulated period due to development, runoff, and changing precipitation.',
       relatedSpecies: ['Coho Salmon', 'River Otter'],
+      featureRadius: 9,
+      habitat: 'Shaded forest stream channel',
+      environmentalPressures: ['Reduced flow from upstream development', 'Warmer water from lost streamside shade'],
     },
     {
       id: 'pond-1',
@@ -137,12 +159,14 @@ export const evergreenValleyVault: VaultDefinition = {
       name: 'Willow Pond',
       position: [7, 0, 6],
       presentInYears: [1995, 2026, 2050],
-      description: 'A small pond fed by the river, ringed with willows and reeds.',
+      description: 'A small pond fed by the creek, ringed with willows and reeds.',
       ecologicalRole:
         'Provides still water habitat for amphibians and insects, and a drinking source for wildlife.',
       historicalChange:
         'The pond has shrunk in the simulated 2026 and 2050 states as the water table has dropped.',
       relatedSpecies: ['Pacific Chorus Frog'],
+      habitat: 'Willow-ringed forest pond',
+      environmentalPressures: ['Dropping water table', 'Reduced inflow from the creek'],
     },
     {
       id: 'meadow-flowers-1',
@@ -158,6 +182,87 @@ export const evergreenValleyVault: VaultDefinition = {
         'The meadow has stayed relatively stable, but pollinator diversity has decreased alongside surrounding habitat loss.',
       relatedSpecies: ['Western Bumblebee'],
       connection: { chain: ['Flower', 'Bee', 'Pollination', 'Plant reproduction', 'Food web'] },
+      trophicRole: 'producer',
+      habitat: 'Sunlit forest-edge meadow clearing',
+      environmentalPressures: ['Declining pollinator diversity', 'Habitat loss at the meadow edge'],
+    },
+    {
+      id: 'fern-1',
+      kind: 'fern',
+      biodiversityCategory: 'plants',
+      name: 'Sword Fern Cluster',
+      position: [-4, 0, -1],
+      presentInYears: [1995, 2026, 2050],
+      description: 'A spreading cluster of sword ferns carpeting the shaded forest floor beneath the conifers.',
+      ecologicalRole:
+        'Holds moisture in the topsoil and provides cover for ground-dwelling insects and small amphibians.',
+      historicalChange:
+        'Fern cover has thinned somewhat as the canopy above has opened up, exposing the floor to more direct sun.',
+      trophicRole: 'producer',
+      habitat: 'Shaded understory beneath the conifer canopy',
+      environmentalPressures: ['Increased sun exposure from canopy loss', 'Soil drying at the forest edge'],
+    },
+    {
+      id: 'fern-2',
+      kind: 'fern',
+      biodiversityCategory: 'plants',
+      name: 'Sword Fern Cluster',
+      position: [2, 0, -5],
+      presentInYears: [1995, 2026, 2050],
+      description: 'A second fern cluster growing along the damp bank just above Fernbrook Creek.',
+      ecologicalRole: 'Filters runoff before it reaches the creek and stabilizes the loose bank soil.',
+      historicalChange: 'Remains present in every simulated year, though its extent has shrunk slightly.',
+      trophicRole: 'producer',
+      habitat: 'Damp streambank above Fernbrook Creek',
+      environmentalPressures: ['Bank erosion', 'Reduced soil moisture as creek flow has dropped'],
+    },
+    {
+      id: 'moss-1',
+      kind: 'moss',
+      biodiversityCategory: 'plants',
+      name: 'Moss Carpet',
+      position: [-8, 0, -1],
+      presentInYears: [1995, 2026, 2050],
+      description: 'A soft carpet of moss covering fallen branches and stones on the forest floor.',
+      ecologicalRole:
+        'Retains moisture at the soil surface and provides habitat for tiny invertebrates that feed the wider food web.',
+      historicalChange:
+        'Moss cover has declined slightly as the forest floor has dried out with reduced canopy shade.',
+      trophicRole: 'producer',
+      habitat: 'Damp, shaded forest floor',
+      environmentalPressures: ['Drying forest floor from canopy loss', 'Reduced humidity at ground level'],
+    },
+    {
+      id: 'moss-2',
+      kind: 'moss',
+      biodiversityCategory: 'plants',
+      name: 'Moss Carpet',
+      position: [5, 0, -2],
+      presentInYears: [1995, 2026, 2050],
+      description: 'Moss growing thick on the north-facing side of the western ridge, out of direct sun.',
+      ecologicalRole: 'Cushions rainfall impact on bare soil, reducing erosion on the slope.',
+      historicalChange: 'Stable through the simulated period, favored by its shaded north-facing position.',
+      trophicRole: 'producer',
+      habitat: 'Shaded north-facing slope',
+      environmentalPressures: ['Erosion on the surrounding slope', 'Gradual canopy thinning nearby'],
+    },
+    {
+      id: 'log-1',
+      kind: 'log',
+      biodiversityCategory: 'fungi',
+      name: 'Fallen Cedar Log',
+      position: [-3, 0, 2],
+      presentInYears: [1995, 2026, 2050],
+      description:
+        'A fallen cedar trunk slowly decomposing on the forest floor, framed here as decomposer habitat rather than scenery — its bark hosts the fungi patch nearby and shelters ground-dwelling invertebrates.',
+      ecologicalRole:
+        'Decomposing wood recycles nutrients back into the soil and provides structure and moisture for fungi and invertebrates.',
+      historicalChange:
+        'This log has been present and steadily decomposing throughout the simulated period.',
+      connection: { chain: ['Fallen tree', 'Decomposers', 'Nutrient cycling', 'Soil health'] },
+      trophicRole: 'decomposer',
+      habitat: 'Decomposing deadwood on the forest floor',
+      environmentalPressures: ['Fewer new fallen logs as mature trees are removed', 'Drier deadwood from reduced canopy shade'],
     },
     {
       id: 'bird-spotted-owl',
@@ -172,6 +277,10 @@ export const evergreenValleyVault: VaultDefinition = {
       historicalChange:
         'Changes in forest structure can affect available habitat. Its range in this valley has narrowed in the simulation.',
       relatedSpecies: ['Douglas Fir'],
+      trophicRole: 'secondary-consumer',
+      habitat: 'Mature, dense conifer forest',
+      diet: 'Flying squirrels, woodrats, and other small mammals',
+      environmentalPressures: ['Loss of mature forest structure', 'Habitat fragmentation'],
     },
     {
       id: 'bird-flock-1',
@@ -183,6 +292,10 @@ export const evergreenValleyVault: VaultDefinition = {
       description: 'A vividly colored jay commonly seen moving between forest and meadow edges.',
       ecologicalRole: 'Disperses seeds and preys on insects, helping regulate forest edge habitats.',
       historicalChange: 'Remains common across all simulated years, adapting well to forest edges.',
+      trophicRole: 'secondary-consumer',
+      habitat: 'Forest and meadow edges',
+      diet: 'Insects, seeds, and occasionally small vertebrates or eggs',
+      environmentalPressures: ['Changing forest-edge structure as development expands'],
     },
     {
       id: 'animal-deer-1',
@@ -195,6 +308,10 @@ export const evergreenValleyVault: VaultDefinition = {
       ecologicalRole: 'Grazing shapes meadow and understory vegetation patterns.',
       historicalChange:
         'Deer have adapted to fragmented habitat, though safe movement corridors have narrowed.',
+      trophicRole: 'primary-consumer',
+      habitat: 'Meadow edges and forest understory',
+      diet: 'Grasses, forbs, and shrub browse',
+      environmentalPressures: ['Narrowing movement corridors', 'Habitat fragmentation from roads'],
     },
     {
       id: 'fungi-patch-1',
@@ -209,6 +326,9 @@ export const evergreenValleyVault: VaultDefinition = {
       historicalChange:
         'Fungal diversity tracks closely with old-growth structure, and has declined as mature trees were removed.',
       connection: { chain: ['Fallen wood', 'Fungi', 'Nutrient cycling', 'Soil health', 'Tree growth'] },
+      trophicRole: 'decomposer',
+      habitat: 'Fallen wood and leaf litter on the forest floor',
+      environmentalPressures: ['Loss of old-growth structure', 'Fewer fallen logs as mature trees are removed'],
     },
     {
       id: 'rock-outcrop-1',
@@ -254,7 +374,7 @@ export const evergreenValleyVault: VaultDefinition = {
       name: 'Ridge Cabin',
       position: [8, 0, -2],
       presentInYears: [2026, 2050],
-      description: 'A small structure built along the ridge overlooking the river.',
+      description: 'A small structure built along the ridge overlooking the creek.',
       ecologicalRole:
         'Represents low-density human development and its footprint on surrounding habitat.',
       historicalChange:
@@ -283,11 +403,11 @@ export const evergreenValleyVault: VaultDefinition = {
     },
     {
       id: 'ch2',
-      title: 'The River',
+      title: 'The Creek',
       year: 1995,
       narration:
-        'Water flow and surrounding vegetation shape the ecosystem. The Evergreen River ran high, feeding the pond and keeping the soil rich with moisture.',
-      focusObjectId: 'river-main',
+        'Water flow and surrounding vegetation shape the ecosystem. Fernbrook Creek ran high, feeding the pond and keeping the soil rich with moisture.',
+      focusObjectId: 'creek-main',
     },
     {
       id: 'ch3',

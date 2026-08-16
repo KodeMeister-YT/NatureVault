@@ -17,6 +17,9 @@ import { Cactus } from './Cactus';
 import { DryRiverbed } from './DryRiverbed';
 import { Coral } from './Coral';
 import { FishSchool } from './FishSchool';
+import { Fern } from './Fern';
+import { MossPatch } from './MossPatch';
+import { FallenLog } from './FallenLog';
 
 interface EnvironmentalObjectRendererProps {
   object: EnvironmentalObject;
@@ -120,6 +123,36 @@ export function EnvironmentalObjectRenderer({
       return <Fungi position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'rock':
       return <Rock position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'fern':
+      return (
+        <Fern
+          position={object.position}
+          vegetationDensity={vegetationDensity}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'moss':
+      return (
+        <MossPatch
+          position={object.position}
+          vegetationDensity={vegetationDensity}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'log':
+      return (
+        <FallenLog
+          position={object.position}
+          rotationY={seededRange(object.position[0] * 5 + object.position[2] * 3, 0, Math.PI * 2)}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
     case 'cactus':
       return <Cactus position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'dryRiverbed':
