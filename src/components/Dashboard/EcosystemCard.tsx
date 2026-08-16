@@ -5,10 +5,11 @@ const gradientByType: Record<string, string> = {
   'temperate-forest': 'from-[#0f2318] via-[#1a3324] to-[#2c4a34]',
   wetland: 'from-[#0c2226] via-[#173a3d] to-[#2c5459]',
   alpine: 'from-[#111b26] via-[#1f3040] to-[#3a5064]',
-  'urban-green-space': 'from-[#16221a] via-[#233427] to-[#3c5240]',
+  savanna: 'from-[#3a2e14] via-[#7a5e28] to-[#c9a24a]',
   desert: 'from-[#3a2c18] via-[#6b4f2e] to-[#c9a877]',
   'coral-reef': 'from-[#0a2a30] via-[#155a63] to-[#e0765f]',
   lake: 'from-[#0e2230] via-[#1c4356] to-[#4f8fa8]',
+  'tropical-forest': 'from-[#12310f] via-[#2c5a1f] to-[#7a9a3f]',
 };
 
 export function EcosystemCard({ ecosystem }: { ecosystem: Ecosystem }) {

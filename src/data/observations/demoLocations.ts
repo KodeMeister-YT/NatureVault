@@ -18,10 +18,6 @@ export const demoLocationsByEcosystemType: Record<string, DemoLocation[]> = {
     { id: 'dl-5', name: 'Timberline Trail', type: 'Alpine', distanceLabel: '52 mi away' },
     { id: 'dl-6', name: 'Larch Mountain Trailhead', type: 'Alpine Forest', distanceLabel: '28 mi away' },
   ],
-  'urban-green-space': [
-    { id: 'dl-7', name: 'Tom McCall Waterfront Park', type: 'Urban Green Space', distanceLabel: '1.2 mi away' },
-    { id: 'dl-8', name: 'Laurelhurst Park', type: 'Urban Green Space', distanceLabel: '2.6 mi away' },
-  ],
 };
 
 export const getDemoLocations = (ecosystemType: string): DemoLocation[] =>

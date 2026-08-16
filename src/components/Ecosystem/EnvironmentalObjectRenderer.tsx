@@ -20,6 +20,9 @@ import { FishSchool } from './FishSchool';
 import { Fern } from './Fern';
 import { MossPatch } from './MossPatch';
 import { FallenLog } from './FallenLog';
+import { Vine } from './Vine';
+import { TropicalFlower } from './TropicalFlower';
+import { TermiteMound } from './TermiteMound';
 
 interface EnvironmentalObjectRendererProps {
   object: EnvironmentalObject;
@@ -71,12 +74,39 @@ export function EnvironmentalObjectRenderer({
         <Tree
           position={object.position}
           seed={object.position[0] * 3 + object.position[2]}
+          variant={object.variant === 'broadleaf' ? 'broadleaf' : 'conifer'}
           selected={selected}
           dimmed={dimmed}
           highlighted={highlighted}
           {...commonHandlers}
         />
       );
+    case 'canopyTree':
+      return (
+        <Tree
+          position={object.position}
+          seed={object.position[0] * 3 + object.position[2]}
+          variant={object.variant === 'conifer' ? 'conifer' : 'broadleaf'}
+          selected={selected}
+          dimmed={dimmed}
+          highlighted={highlighted}
+          {...commonHandlers}
+        />
+      );
+    case 'vine':
+      return (
+        <Vine
+          position={object.position}
+          vegetationDensity={vegetationDensity}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'tropicalFlower':
+      return <TropicalFlower position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'termiteMound':
+      return <TermiteMound position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'plant':
       return (
         <>

@@ -10,9 +10,9 @@ export const conservationActions: ConservationAction[] = [
   { id: 'ca-7', ecosystemType: 'wetland', action: 'Participate in a local shoreline or waterway cleanup' },
   { id: 'ca-8', ecosystemType: 'alpine', action: 'Practice Leave No Trace principles on high-elevation trails' },
   { id: 'ca-9', ecosystemType: 'alpine', action: 'Support organizations tracking snowpack and glacier change' },
-  { id: 'ca-10', ecosystemType: 'urban-green-space', action: 'Plant native, pollinator-friendly species if you have outdoor space' },
-  { id: 'ca-11', ecosystemType: 'urban-green-space', action: 'Volunteer with a local park or urban greening initiative' },
-  { id: 'ca-12', ecosystemType: 'urban-green-space', action: 'Advocate for tree canopy and green space in local planning' },
+  { id: 'ca-10', ecosystemType: 'savanna', action: 'Support organizations working on grassland and savanna conservation' },
+  { id: 'ca-11', ecosystemType: 'savanna', action: 'Learn about sustainable grazing-land management practices' },
+  { id: 'ca-12', ecosystemType: 'savanna', action: 'Support wildlife corridors that let migrating herds move between grazing areas' },
 ];
 
 export const getActionsForType = (ecosystemType: string): ConservationAction[] =>

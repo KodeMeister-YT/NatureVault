@@ -229,28 +229,28 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
   - Assert the lake object's `featureRadius` is greater than the largest `featureRadius`/default radius used by any existing pond object, confirming visual distinction from wetland marsh.
   - _Requirements: 6.7_
 
-- [ ] 31. Create new primitives: `Vine`, `TropicalFlower`; add `canopyTree` variant to `Tree`
+- [x] 31. Create new primitives: `Vine`, `TropicalFlower`; add `canopyTree` variant to `Tree`
   - `Vine`: draped instanced curve segments on a host tree.
   - `TropicalFlower`: brighter-palette variant of `Pollinator`'s flower styling.
   - Add a `variant="broadleaf"` code path to `Tree.tsx` (wider, flatter foliage geometry) used for `canopyTree`.
   - _Requirements: 6.8_
 
-- [ ] 32. Author `src/data/ecosystems/tropicalForest.ts`
+- [x] 32. Author `src/data/ecosystems/tropicalForest.ts`
   - Dense canopy (`canopyTree`), `vine`, `waterfall` water feature (`water.kind: 'waterfall'`), `tropicalFlower` objects; humid-haze `atmosphere` (warm diffuse light, dense near fog); full biodiversity-hierarchy fields; timeline; story chapters.
   - _Requirements: 6.8, 6.1_
 
-- [ ] 33. Create `TermiteMound` primitive
+- [x] 33. Create `TermiteMound` primitive
   - Simple tapered cone cluster following `Rock.tsx`'s build pattern.
   - _Requirements: 6.5_
 
-- [ ] 34. Rename Urban Green Space to Grassland/Savanna
+- [x] 34. Rename Urban Green Space to Grassland/Savanna
   - Rename `src/data/ecosystems/urbanGreenSpace.ts` to `grasslandSavanna.ts` (use `smart_relocate` to preserve imports); change `ecosystemId` to `grassland-savanna`.
   - Change ecosystem `type` from `'urban-green-space'` to `'savanna'` in `types/ecosystem.ts`'s `EcosystemType` union.
   - Replace content: `flat-grassland` terrain, scattered broadleaf `Tree`s, a small `pond`-based watering hole, `termiteMound` objects, grazing `Animal` objects; full biodiversity-hierarchy fields; timeline; story chapters.
   - Update every reference to the old id/type: `data/ecosystems/index.ts`, `data/ecosystems/vaults.ts`, `components/Dashboard/EcosystemCard.tsx` (`gradientByType`), `data/observations/demoLocations.ts`, `data/observations/conservationActions.ts`.
   - _Requirements: 6.5, 10.2_
 
-- [ ] 34.1 Unit test: no remaining references to `urban-green-space`
+- [x] 34.1 Unit test: no remaining references to `urban-green-space`
   - Grep-style test (or a small Node script run as a vitest test) asserting no source file under `src/` contains the literal string `urban-green-space` after the rename.
   - _Requirements: 6.5, 10.2_
 
