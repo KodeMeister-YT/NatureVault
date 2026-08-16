@@ -4,7 +4,9 @@ export type EcosystemType =
   | 'temperate-forest'
   | 'wetland'
   | 'alpine'
-  | 'urban-green-space';
+  | 'urban-green-space'
+  | 'desert'
+  | 'coral-reef';
 
 export interface EnvironmentalIndicator {
   label: string;

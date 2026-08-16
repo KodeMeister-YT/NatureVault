@@ -13,6 +13,10 @@ import { Fungi } from './Fungi';
 import { Pollinator } from './Pollinator';
 import { ReedCluster } from './ReedCluster';
 import { Frog } from './Frog';
+import { Cactus } from './Cactus';
+import { DryRiverbed } from './DryRiverbed';
+import { Coral } from './Coral';
+import { FishSchool } from './FishSchool';
 
 interface EnvironmentalObjectRendererProps {
   object: EnvironmentalObject;
@@ -116,6 +120,21 @@ export function EnvironmentalObjectRenderer({
       return <Fungi position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'rock':
       return <Rock position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'cactus':
+      return <Cactus position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'dryRiverbed':
+      return <DryRiverbed position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'coral':
+      return <Coral position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'fishSchool':
+      return (
+        <FishSchool
+          center={object.position}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
     case 'mountain':
       return <Mountain position={object.position} />;
     case 'building':

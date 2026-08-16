@@ -176,28 +176,28 @@ This implementation plan expands the ecosystem vault from 4 to 8 biomes by gener
 
 ### Tier 2 — Desert, Coral Reef, Temperate Forest upgrade
 
-- [ ] 23. Create new primitives: `Cactus`, `DryRiverbed`
+- [x] 23. Create new primitives: `Cactus`, `DryRiverbed`
   - Follow the existing single-purpose primitive file pattern (see `Rock.tsx`/`PathRibbon.tsx`) for both.
   - _Requirements: 6.6_
 
-- [ ] 24. Author `src/data/ecosystems/desert.ts`
+- [x] 24. Author `src/data/ecosystems/desert.ts`
   - `terrain.kind: 'duned-desert'`, `water.kind: 'none'`, atmosphere per design.md example (harsh bright sun, minimal fog), `cactus`/`dryRiverbed` objects with full biodiversity-hierarchy fields, 3+ year timeline, story chapters.
   - _Requirements: 6.6, 6.1_
 
-- [ ] 24.1 Unit test: Desert has no water-kind objects (P3 instance)
+- [x] 24.1 Unit test: Desert has no water-kind objects (P3 instance)
   - Assert `desertVault.objects` contains no object with `kind` in `{river, pond, creek, lake, waterfall}`.
   - _Requirements: 6.6, 3.4_
 
-- [ ] 25. Create new primitives: `Coral`, `FishSchool`
+- [x] 25. Create new primitives: `Coral`, `FishSchool`
   - `Coral`: branching instanced clusters, color from `biome.style`.
   - `FishSchool`: instanced mesh with boid-lite drift (modeled after `Bird`'s circling pattern, horizontal/grouped).
   - _Requirements: 6.9_
 
-- [ ] 26. Author `src/data/ecosystems/coralReef.ts`
+- [x] 26. Author `src/data/ecosystems/coralReef.ts`
   - `terrain.kind: 'seafloor'`, `water.kind: 'underwater-ambient'`, `atmosphere.skyTreatment: 'underwater-ambience'`, `coral`/`fishSchool` objects, no terrestrial object kinds, biome-appropriate `cameraDefaults` (lower/closer), full biodiversity-hierarchy fields, timeline, story chapters.
   - _Requirements: 6.9, 6.1_
 
-- [ ] 26.1 Unit test: Coral Reef has no terrestrial objects (P4 instance)
+- [x] 26.1 Unit test: Coral Reef has no terrestrial objects (P4 instance)
   - Assert `coralReefVault.objects` contains no object with `kind` in `{tree, canopyTree, building, road, path, cactus}`.
   - _Requirements: 6.9, 3.5_
 

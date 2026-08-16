@@ -6,6 +6,8 @@ const gradientByType: Record<string, string> = {
   wetland: 'from-[#0c2226] via-[#173a3d] to-[#2c5459]',
   alpine: 'from-[#111b26] via-[#1f3040] to-[#3a5064]',
   'urban-green-space': 'from-[#16221a] via-[#233427] to-[#3c5240]',
+  desert: 'from-[#3a2c18] via-[#6b4f2e] to-[#c9a877]',
+  'coral-reef': 'from-[#0a2a30] via-[#155a63] to-[#e0765f]',
 };
 
 export function EcosystemCard({ ecosystem }: { ecosystem: Ecosystem }) {

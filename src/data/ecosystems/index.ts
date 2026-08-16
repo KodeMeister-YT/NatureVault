@@ -70,6 +70,40 @@ export const ecosystems: Ecosystem[] = [
       { label: 'Biodiversity Index', value: 40, unit: '%' },
     ],
   },
+  {
+    id: 'desert',
+    name: 'Painted Basin Desert',
+    type: 'desert',
+    typeLabel: 'Desert Ecosystem',
+    location: 'Painted Basin, Southern Oregon High Desert',
+    description:
+      'A sparse but resilient desert basin where cacti and a dry wash hold on against a dropping water table.',
+    availableYears: [1985, 2005, 2026, 2050],
+    heroImage: 'desert',
+    emoji: '🌵',
+    environmentalIndicators: [
+      { label: 'Vegetation Density', value: 17, unit: '%' },
+      { label: 'Groundwater Level', value: 22, unit: '%' },
+      { label: 'Biodiversity Index', value: 30, unit: '%' },
+    ],
+  },
+  {
+    id: 'coral-reef',
+    name: 'Lantern Cay Reef',
+    type: 'coral-reef',
+    typeLabel: 'Coral Reef Ecosystem',
+    location: 'Lantern Cay, Tropical Pacific',
+    description:
+      'A vibrant reef community facing warming water and bleaching, where coral clusters and fish schools tell the story of a changing ocean.',
+    availableYears: [1990, 2010, 2026, 2050],
+    heroImage: 'reef',
+    emoji: '🐠',
+    environmentalIndicators: [
+      { label: 'Live Coral Cover', value: 48, unit: '%' },
+      { label: 'Water Clarity', value: 78, unit: '%' },
+      { label: 'Biodiversity Index', value: 50, unit: '%' },
+    ],
+  },
 ];
 
 export const getEcosystemById = (id: string): Ecosystem | undefined =>
