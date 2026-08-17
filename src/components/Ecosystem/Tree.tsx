@@ -10,6 +10,8 @@ interface TreeProps {
   /** 'conifer' (default, existing stacked-cone stylized fir/cedar) or 'broadleaf'
    *  (wider, flatter canopy silhouette used for the tropical-forest canopyTree kind). */
   variant?: 'conifer' | 'broadleaf';
+  /** Biome-specific base (unselected) foliage color, resolved via resolveBiomeStyle. Ignored when selected/highlighted. */
+  colorOverride?: string;
   selected?: boolean;
   dimmed?: boolean;
   highlighted?: boolean;
@@ -23,6 +25,7 @@ export function Tree({
   scale = 1,
   seed = 0,
   variant = 'conifer',
+  colorOverride,
   selected,
   dimmed,
   highlighted,
@@ -41,7 +44,7 @@ export function Tree({
     }
   });
 
-  const foliageColor = highlighted ? '#8fd18a' : selected ? '#a8d99a' : '#2f5a3a';
+  const foliageColor = highlighted ? '#8fd18a' : selected ? '#a8d99a' : colorOverride ?? '#2f5a3a';
   const opacity = dimmed ? 0.25 : 1;
 
   return (

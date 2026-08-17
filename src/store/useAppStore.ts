@@ -40,6 +40,10 @@ interface AppState {
   natureWalksCompleted: number;
   incrementNatureWalksCompleted: () => void;
 
+  // Ambient audio mute state (persisted across navigation, Requirement 8.4)
+  isAudioMuted: boolean;
+  setAudioMuted: (muted: boolean) => void;
+
   // Reset (used when exiting demo mode to avoid polluting real data)
   resetProgress: () => void;
 }
@@ -61,6 +65,9 @@ export const useAppStore = create<AppState>()(
       exitDemoMode: () => set({ isDemoMode: false, ...initialProgressState }),
 
       ...initialProgressState,
+
+      isAudioMuted: true,
+      setAudioMuted: (muted) => set({ isAudioMuted: muted }),
 
       recordVaultVisit: (ecosystemId, year) =>
         set((state) => {
@@ -147,6 +154,7 @@ export const useAppStore = create<AppState>()(
         biodiversityCategoriesViewed: state.biodiversityCategoriesViewed,
         storiesCompleted: state.storiesCompleted,
         natureWalksCompleted: state.natureWalksCompleted,
+        isAudioMuted: state.isAudioMuted,
       }),
     },
   ),

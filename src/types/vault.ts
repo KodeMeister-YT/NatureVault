@@ -30,12 +30,38 @@ export type ObjectKind =
   | 'canopyTree'
   | 'coral'
   | 'fishSchool'
-  | 'termiteMound';
+  | 'termiteMound'
+  | 'crab'
+  | 'turtle'
+  | 'anemone'
+  | 'scorpion'
+  | 'burrow';
+
+export type RelationshipKind =
+  | 'preys-on' | 'preyed-on-by'
+  | 'pollinates' | 'pollinated-by'
+  | 'decomposes' | 'decomposed-by'
+  | 'shelters-in' | 'shelters'
+  | 'depends-on' | 'supports';
+
+export interface EcosystemEdge {
+  /** id of another EnvironmentalObject in the SAME biome. Unresolvable ids are skipped defensively. */
+  targetId: string;
+  relationship: RelationshipKind;
+  /** Optional display override, e.g. "pollinates" instead of a generated label from relationship. */
+  label?: string;
+}
 
 export interface EcosystemConnection {
   /** Ordered chain of nodes describing a simplified ecological relationship */
   chain: string[];
+  /** NEW, optional: referential 1-hop edges powering the interactive Ecosystem Web. */
+  edges?: EcosystemEdge[];
 }
+
+/** Taxonomic/visual life-form classification, independent of BiodiversityCategory.
+ *  Doubles as (a) the Life Around You filter key and (b) ObjectInspector's "Category" line. */
+export type LifeForm = 'plant' | 'insect' | 'bird' | 'reptile' | 'mammal' | 'fungi' | 'aquatic';
 
 export interface EnvironmentalObject {
   id: string;
@@ -62,6 +88,8 @@ export interface EnvironmentalObject {
   /** Radius/size hint used by Terrain's shoreline carving and by WaterFeatureRenderer; replaces
    *  the previous hardcoded per-kind radius constants duplicated in VaultScene/CompareView. */
   featureRadius?: number;
+  /** NEW, optional. See LifeForm. Falls back to a derived mapping from biodiversityCategory when absent. */
+  lifeForm?: LifeForm;
 }
 
 export interface VaultStateMetrics {

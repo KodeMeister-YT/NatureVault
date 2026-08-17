@@ -1,5 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import type { Ecosystem } from '../../types/ecosystem';
+import { VaultService } from '../../services/VaultService';
+import { BiodiversityProfileService } from '../../services/BiodiversityProfileService';
+import { getPresentYear, resolveMetricsForYear } from '../../services/ScenarioService';
 
 const gradientByType: Record<string, string> = {
   'temperate-forest': 'from-[#0f2318] via-[#1a3324] to-[#2c4a34]',
@@ -12,12 +15,35 @@ const gradientByType: Record<string, string> = {
   'tropical-forest': 'from-[#12310f] via-[#2c5a1f] to-[#7a9a3f]',
 };
 
+/** Green/amber/red banding for the compact health indicator dot. */
+function healthBandColor(healthPercent: number): string {
+  if (healthPercent >= 66) return 'bg-emerald-400';
+  if (healthPercent >= 33) return 'bg-amber-400';
+  return 'bg-red-400';
+}
+
 export function EcosystemCard({ ecosystem }: { ecosystem: Ecosystem }) {
   const navigate = useNavigate();
   const gradient = gradientByType[ecosystem.type] ?? gradientByType['temperate-forest'];
   const [past, ...rest] = ecosystem.availableYears;
   const future = rest[rest.length - 1];
   const present = rest[0];
+
+  const vault = VaultService.getVault(ecosystem.id);
+  let totalSpecies: number | null = null;
+  let healthPercent: number | null = null;
+  let yearsTracked: number | null = null;
+  if (vault) {
+    const presentYear = getPresentYear(vault.years);
+    totalSpecies = BiodiversityProfileService.computeProfile(vault, presentYear).totalSpecies;
+    const metrics = resolveMetricsForYear(vault.years, presentYear);
+    healthPercent = Math.round(
+      ((metrics.vegetationDensity + metrics.biodiversityLevel + metrics.waterLevel + (1 - metrics.developmentLevel)) /
+        4) *
+        100,
+    );
+    yearsTracked = vault.years.length;
+  }
 
   return (
     <button
@@ -34,7 +60,26 @@ export function EcosystemCard({ ecosystem }: { ecosystem: Ecosystem }) {
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
           <h3 className="font-display text-lg text-vault-offwhite">{ecosystem.name}</h3>
-          <p className="text-sm text-vault-sage-light">{ecosystem.typeLabel}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-vault-sage-light">{ecosystem.typeLabel}</p>
+            {totalSpecies !== null && (
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-vault-offwhite/70">
+                {totalSpecies} species
+              </span>
+            )}
+            {healthPercent !== null && (
+              <span
+                className="flex items-center gap-1 text-[11px] font-medium text-vault-offwhite/70"
+                title={`${healthPercent}% healthy`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`inline-block h-2 w-2 rounded-full ${healthBandColor(healthPercent)}`}
+                />
+                {healthPercent}% healthy
+              </span>
+            )}
+          </div>
         </div>
         <p className="line-clamp-2 text-sm text-vault-offwhite/60">{ecosystem.description}</p>
         <div className="mt-auto flex items-center gap-2 pt-2 text-xs font-medium text-vault-offwhite/70">
@@ -47,6 +92,13 @@ export function EcosystemCard({ ecosystem }: { ecosystem: Ecosystem }) {
             →
           </span>
           <span>{future}</span>
+          {yearsTracked !== null && <span className="text-vault-offwhite/50">{yearsTracked} years tracked</span>}
+          <span className="ml-auto flex items-center gap-1 text-vault-sage-light">
+            Enter Vault
+            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+              →
+            </span>
+          </span>
         </div>
       </div>
     </button>

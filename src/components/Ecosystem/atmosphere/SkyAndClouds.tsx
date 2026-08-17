@@ -10,6 +10,58 @@ interface SkyAndCloudsProps {
   developmentLevel?: number;
 }
 
+const DUST_MOTE_COUNT = 10;
+
+/**
+ * A handful of large, very-low-opacity, slowly-drifting dust motes for
+ * biomes that opt in via `profile.dustHaze` (e.g. desert) — driven generically
+ * by that atmosphere flag rather than any hardcoded ecosystemId check, so
+ * this stays a shared, biome-agnostic effect. Kept deliberately sparse and
+ * near-transparent: the goal is a "hot, hazy, expansive" read, not fog.
+ */
+function DustHaze() {
+  const meshRefs = useRef<THREE.Mesh[]>([]);
+
+  const motes = useMemo(
+    () =>
+      Array.from({ length: DUST_MOTE_COUNT }).map((_, i) => ({
+        startX: seededRange(i * 9.7, -30, 30),
+        z: seededRange(i * 4.3, -22, 6),
+        y: seededRange(i * 6.1, 0.6, 3.2),
+        speed: seededRange(i * 7.4, 0.08, 0.2),
+        scale: seededRange(i * 5.5, 3, 6),
+        opacity: seededRange(i * 8.9, 0.02, 0.05),
+      })),
+    [],
+  );
+
+  useFrame((_, delta) => {
+    meshRefs.current.forEach((m, i) => {
+      if (!m) return;
+      m.position.x += motes[i].speed * delta;
+      if (m.position.x > 36) m.position.x = -36;
+    });
+  });
+
+  return (
+    <>
+      {motes.map((m, i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            if (el) meshRefs.current[i] = el;
+          }}
+          position={[m.startX, m.y, m.z]}
+          scale={m.scale}
+        >
+          <sphereGeometry args={[1, 6, 6]} />
+          <meshBasicMaterial color="#e8d4a0" transparent opacity={m.opacity} depthWrite={false} />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
 /** Simple drifting cloud blobs made of overlapping spheres, plus a sky dome. */
 export function SkyAndClouds({ profile, developmentLevel = 0 }: SkyAndCloudsProps) {
   const groupRefs = useRef<THREE.Group[]>([]);
@@ -68,6 +120,7 @@ export function SkyAndClouds({ profile, developmentLevel = 0 }: SkyAndCloudsProp
           </mesh>
         </group>
       ))}
+      {profile.dustHaze && <DustHaze />}
     </>
   );
 }

@@ -39,6 +39,13 @@ export interface AtmosphereProfile {
   ambient: { color: string; intensity: number };
   hemisphere: { skyColor: string; groundColor: string; intensity: number };
   fog: { color: string; near: number; far: number };
+  /**
+   * Optional lightweight heat-haze/dust-mote visual for hot, dry, expansive
+   * biomes (e.g. desert). Defaults to unset/false for every other biome, so
+   * this is purely additive — SkyAndClouds only renders the dust effect when
+   * a biome's atmosphere profile explicitly opts in.
+   */
+  dustHaze?: boolean;
 }
 
 export interface CameraDefaults {

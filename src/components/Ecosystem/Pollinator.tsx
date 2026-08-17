@@ -5,6 +5,8 @@ import type { ObjectClickHandler } from '../../types/threeEvents';
 
 interface PollinatorProps {
   center: [number, number, number];
+  /** Biome-specific base (unselected) color, resolved via resolveBiomeStyle. Ignored when selected. */
+  colorOverride?: string;
   selected?: boolean;
   dimmed?: boolean;
   onClick?: ObjectClickHandler;
@@ -13,7 +15,7 @@ interface PollinatorProps {
 }
 
 /** A small bee-like creature that hovers erratically near a flower patch. */
-export function Pollinator({ center, selected, dimmed, onClick, onPointerOver, onPointerOut }: PollinatorProps) {
+export function Pollinator({ center, colorOverride, selected, dimmed, onClick, onPointerOver, onPointerOut }: PollinatorProps) {
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -30,7 +32,7 @@ export function Pollinator({ center, selected, dimmed, onClick, onPointerOver, o
     <mesh ref={ref} onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
       <sphereGeometry args={[0.06, 8, 8]} />
       <meshStandardMaterial
-        color={selected ? '#ffd76a' : '#e0a83c'}
+        color={selected ? '#ffd76a' : colorOverride ?? '#e0a83c'}
         emissive={selected ? '#ffd76a' : '#000000'}
         emissiveIntensity={selected ? 0.5 : 0}
         transparent

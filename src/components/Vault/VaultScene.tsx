@@ -1,9 +1,11 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { VaultDefinition, VaultStateMetrics } from '../../types/vault';
 import type { BiodiversityCategory } from '../../types/observation';
 import { SceneComposition } from '../Ecosystem/SceneComposition';
+import { deriveWaterBodies } from '../Ecosystem/deriveWaterBodies';
+import { CameraGroundClamp } from './CameraGroundClamp';
 
 interface VaultSceneProps {
   vault: VaultDefinition;
@@ -34,6 +36,11 @@ export function VaultScene({
   cameraResetKey,
 }: VaultSceneProps) {
   const { cameraDefaults } = vault;
+
+  const waterBodies = useMemo(() => {
+    const visibleObjects = vault.objects.filter((o) => o.presentInYears.includes(year));
+    return deriveWaterBodies(visibleObjects);
+  }, [vault.objects, year]);
 
   return (
     <Canvas
@@ -66,6 +73,7 @@ export function VaultScene({
         maxPolarAngle={cameraDefaults.maxPolarAngle ?? Math.PI / 2.05}
         target={cameraDefaults.target}
       />
+      <CameraGroundClamp terrain={vault.terrain} waterBodies={waterBodies} />
     </Canvas>
   );
 }

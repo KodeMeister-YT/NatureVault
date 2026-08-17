@@ -91,8 +91,12 @@ body {
 }
 
 .glass-panel {
-  background: rgba(20, 37, 28, 0.55);
+  /* Bumped from 0.55 -> 0.68 alpha so text (e.g. the bottom-center "Explore
+     freely" / "Take It Outside" controls) keeps sufficient contrast against
+     every biome's background/atmosphere, including bright skies (e.g. the
+     desert's pale fog), not just darker biomes. */
+  background: rgba(20, 37, 28, 0.68);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(168, 187, 156, 0.18);
+  border: 1px solid rgba(168, 187, 156, 0.22);
 }

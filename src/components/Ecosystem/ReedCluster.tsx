@@ -9,6 +9,8 @@ interface ReedClusterProps {
   radius?: number;
   count?: number;
   vegetationDensity: number; // 0-1
+  /** Biome-specific base (unselected) blade color, resolved via resolveBiomeStyle. Ignored when selected. */
+  colorOverride?: string;
   selected?: boolean;
   dimmed?: boolean;
   onClick?: ObjectClickHandler;
@@ -26,6 +28,7 @@ export function ReedCluster({
   radius = 2.2,
   count = 90,
   vegetationDensity,
+  colorOverride,
   selected,
   dimmed,
   onClick,
@@ -51,7 +54,7 @@ export function ReedCluster({
   }, [count, radius, position]);
 
   const opacity = dimmed ? 0.2 : 1;
-  const baseColor = selected ? '#c7d98a' : '#6f8f4a';
+  const baseColor = selected ? '#c7d98a' : colorOverride ?? '#6f8f4a';
   const headColor = selected ? '#e0c96f' : '#a68a4a';
 
   useFrame((state) => {

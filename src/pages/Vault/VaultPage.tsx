@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { VaultService } from '../../services/VaultService';
 import { EcosystemService } from '../../services/EcosystemService';
 import { resolveMetricsForYear } from '../../services/ScenarioService';
+import { AudioService } from '../../services/AudioService';
 import { useVaultSessionStore } from '../../store/useVaultSessionStore';
 import { useAppStore } from '../../store/useAppStore';
 import { useWebGLSupport } from '../../hooks/useWebGLSupport';
@@ -18,6 +19,7 @@ import { CompareView } from '../../components/Comparison/CompareView';
 import { StoryModeOverlay } from '../../components/StoryMode/StoryModeOverlay';
 import { TakeItOutsidePanel } from '../../components/Vault/TakeItOutsidePanel';
 import { NatureWalkModal } from '../../components/Vault/NatureWalkModal';
+import { EcosystemOverviewPanel } from '../../components/Vault/EcosystemOverviewPanel';
 
 export function VaultPage() {
   const { ecosystemId } = useParams<{ ecosystemId: string }>();
@@ -29,6 +31,8 @@ export function VaultPage() {
   const [cameraResetKey, setCameraResetKey] = useState(0);
   const [showTakeItOutside, setShowTakeItOutside] = useState(false);
   const [showNatureWalk, setShowNatureWalk] = useState(false);
+  const [overviewDismissed, setOverviewDismissed] = useState(false);
+  const hasStartedAudioRef = useRef(false);
 
   const ecosystem = ecosystemId ? EcosystemService.getById(ecosystemId) : undefined;
   const vault = ecosystemId ? VaultService.getVault(ecosystemId) : undefined;
@@ -62,6 +66,8 @@ export function VaultPage() {
   const markBiodiversityCategoryViewed = useAppStore((s) => s.markBiodiversityCategoryViewed);
   const markStoryCompleted = useAppStore((s) => s.markStoryCompleted);
   const addObservation = useAppStore((s) => s.addObservation);
+  const isAudioMuted = useAppStore((s) => s.isAudioMuted);
+  const setAudioMuted = useAppStore((s) => s.setAudioMuted);
 
   // Reset session when the ecosystem changes, and record the visit once loaded.
   useEffect(() => {
@@ -69,6 +75,7 @@ export function VaultPage() {
     const [minYear] = VaultService.getMinMaxYear(vault);
     resetSession(minYear);
     setIsLoading(true);
+    setOverviewDismissed(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vault?.ecosystemId]);
 
@@ -79,12 +86,38 @@ export function VaultPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const [, maxYear] = useMemo(() => (vault ? VaultService.getMinMaxYear(vault) : [0, 0]), [vault]);
+  // Ambient audio never auto-starts (Requirement 8.6) — this effect only tears down the
+  // previous biome's audio graph when the ecosystem changes or the Vault unmounts.
+  useEffect(() => {
+    hasStartedAudioRef.current = false;
+    return () => {
+      AudioService.stop();
+      hasStartedAudioRef.current = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vault?.ecosystemId]);
+
+  const handleToggleAudio = () => {
+    if (!vault) return;
+    if (!hasStartedAudioRef.current) {
+      hasStartedAudioRef.current = true;
+      AudioService.start(vault.ecosystemId);
+      setAudioMuted(false);
+      return;
+    }
+    const nextMuted = !isAudioMuted;
+    AudioService.setMuted(nextMuted);
+    setAudioMuted(nextMuted);
+  };
+
 
   const rawMetrics = useMemo(() => {
     if (!vault) return { vegetationDensity: 0, waterLevel: 0, biodiversityLevel: 0, developmentLevel: 0 };
-    return resolveMetricsForYear(vault.years, year, year === maxYear ? scenarioId : undefined);
-  }, [vault, year, scenarioId, maxYear]);
+    // Always pass scenarioId through — resolveMetricsForYear internally gates
+    // scenario application to projected years only, so this correctly applies
+    // across every projected year (e.g. 2050 and 2075), not just the array's max year.
+    return resolveMetricsForYear(vault.years, year, scenarioId);
+  }, [vault, year, scenarioId]);
 
   const metrics = useAnimatedMetrics(rawMetrics);
 
@@ -178,7 +211,14 @@ export function VaultPage() {
       {/* Top-center: timeline + scenario switcher */}
       <div className="pointer-events-auto absolute left-1/2 top-4 z-30 flex -translate-x-1/2 flex-col items-center gap-2">
         <Timeline years={vault.years.map((y) => y.year)} year={year} onChange={setYear} />
-        {year === maxYear && <ScenarioSwitcher activeScenarioId={scenarioId} onChange={setScenarioId} />}
+        {year >= 2050 && (
+          <ScenarioSwitcher
+            activeScenarioId={scenarioId}
+            onChange={setScenarioId}
+            years={vault.years}
+            year={year}
+          />
+        )}
       </div>
 
       {/* Top-right: mode toggles */}
@@ -189,6 +229,12 @@ export function VaultPage() {
           onClick={toggleBiodiversityView}
         />
         <ToggleButton label="Story Mode" active={isStoryModeOn} onClick={startStoryMode} />
+        <ToggleButton
+          label={!hasStartedAudioRef.current || isAudioMuted ? 'Sound: Off' : 'Sound: On'}
+          active={hasStartedAudioRef.current && !isAudioMuted}
+          onClick={handleToggleAudio}
+          disabled={!AudioService.isSupported()}
+        />
         <ToggleButton
           label="Compare"
           active={compareMode !== 'off'}
@@ -305,17 +351,37 @@ export function VaultPage() {
       )}
 
       {showNatureWalk && <NatureWalkModal onClose={() => setShowNatureWalk(false)} />}
+
+      {!overviewDismissed && (
+        <EcosystemOverviewPanel
+          biome={vault}
+          year={year}
+          metrics={metrics}
+          onDismiss={() => setOverviewDismissed(true)}
+        />
+      )}
     </div>
   );
 }
 
-function ToggleButton({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+function ToggleButton({
+  label,
+  active,
+  onClick,
+  disabled,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       aria-pressed={active}
-      className={`glass-panel rounded-full px-4 py-2 text-xs font-medium transition-colors ${
+      className={`glass-panel rounded-full px-4 py-2 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
         active ? 'bg-vault-sage/25 text-vault-offwhite' : 'text-vault-offwhite/80 hover:text-vault-offwhite'
       }`}
     >

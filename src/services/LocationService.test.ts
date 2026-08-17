@@ -53,7 +53,23 @@ describe('LocationService.resolveLocation status transitions', () => {
       expect(result.city).toBe('Portland');
       expect(result.region).toBe('Oregon');
       expect(result.isWithinDemoRegion).toBe(true);
+      expect(result.matchedRegion?.id).toBe('portland');
       expect(result.mapsSearchUrl).toContain('45.5,-122.6');
+    }
+  });
+
+  it('populates matchedRegion for a non-Portland region (Mumbai)', async () => {
+    mockGeolocation('granted', { latitude: 19.076, longitude: 72.8777 });
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ city: 'Mumbai', principalSubdivision: 'Maharashtra', countryName: 'India' }),
+    }) as unknown as typeof fetch;
+
+    const result = await LocationService.resolveLocation();
+    expect(result.status).toBe('resolved');
+    if (result.status === 'resolved') {
+      expect(result.matchedRegion?.id).toBe('mumbai');
+      expect(result.isWithinDemoRegion).toBe(true);
     }
   });
 
@@ -84,5 +100,20 @@ describe('LocationService.resolveLocation status transitions', () => {
     expect(result.status).not.toBe('resolved');
     expect((result as { city?: string }).city).toBeUndefined();
     expect((result as { region?: string }).region).toBeUndefined();
+  });
+});
+
+describe('LocationService.getManualRegionOptions', () => {
+  it('returns one option per region plus the free-text city-search option (9 total)', () => {
+    const options = LocationService.getManualRegionOptions();
+    expect(options).toHaveLength(9);
+    expect(options.filter((o) => o.isDemoDataset)).toHaveLength(8);
+    expect(options.find((o) => o.id === 'search-city')).toEqual({
+      id: 'search-city',
+      label: 'Explore near a city you type',
+      isDemoDataset: false,
+    });
+    expect(options.find((o) => o.id === 'portland')).toBeDefined();
+    expect(options.find((o) => o.id === 'mumbai')).toBeDefined();
   });
 });

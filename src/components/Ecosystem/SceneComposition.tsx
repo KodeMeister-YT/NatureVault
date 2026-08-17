@@ -6,6 +6,7 @@ import { Terrain } from './Terrain';
 import { AtmosphereRenderer } from './atmosphere/AtmosphereRenderer';
 import { WaterFeatureRenderer, isWaterKindObject } from './WaterFeatureRenderer';
 import { EnvironmentalObjectRenderer } from './EnvironmentalObjectRenderer';
+import { deriveWaterBodies } from './deriveWaterBodies';
 
 interface SceneCompositionProps {
   biome: BiomeDefinition;
@@ -40,16 +41,7 @@ export function SceneComposition({
 }: SceneCompositionProps) {
   const visibleObjects = useMemo(() => biome.objects.filter((o) => o.presentInYears.includes(year)), [biome.objects, year]);
 
-  const waterBodies = useMemo(
-    () =>
-      visibleObjects
-        .filter(isWaterKindObject)
-        .map((o) => ({
-          position: o.position,
-          featureRadius: o.featureRadius ?? (o.kind === 'river' ? 9 : 4.5),
-        })),
-    [visibleObjects],
-  );
+  const waterBodies = useMemo(() => deriveWaterBodies(visibleObjects), [visibleObjects]);
 
   useCursor(interactive && Boolean(hoveredObjectId));
 
@@ -118,6 +110,7 @@ export function SceneComposition({
             <EnvironmentalObjectRenderer
               key={object.id}
               object={object}
+              style={biome.style}
               vegetationDensity={metrics.vegetationDensity}
               biodiversityLevel={metrics.biodiversityLevel}
               developmentLevel={metrics.developmentLevel}

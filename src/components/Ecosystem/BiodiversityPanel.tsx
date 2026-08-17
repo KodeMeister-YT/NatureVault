@@ -66,7 +66,7 @@ export function BiodiversityPanel({
           onChange={onToggleConnections}
           className="h-3.5 w-3.5 accent-vault-sage"
         />
-        Ecosystem Connections
+        🕸️ Ecosystem Web
       </label>
     </div>
   );

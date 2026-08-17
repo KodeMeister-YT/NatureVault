@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { LocationService } from '../../services/LocationService';
 
 interface LocationSelectorProps {
-  onDemoModeSelected: () => void;
+  onRegionSelected: (regionId: string) => void;
   onRetryLocation: () => void;
 }
 
 /**
  * Shown when LocationService.resolveLocation() returns an UnresolvedLocation.
- * Offers a curated demo-region option, a free-text city search that only
+ * Offers 8 curated demo-region options, a free-text city search that only
  * builds a maps deep link (no geocoding needed — Maps' own search box resolves
  * the free-text query), and a way to retry real location access.
  */
-export function LocationSelector({ onDemoModeSelected, onRetryLocation }: LocationSelectorProps) {
+export function LocationSelector({ onRegionSelected, onRetryLocation }: LocationSelectorProps) {
   const [cityQuery, setCityQuery] = useState('');
   const regionOptions = LocationService.getManualRegionOptions();
 
@@ -32,18 +32,18 @@ export function LocationSelector({ onDemoModeSelected, onRetryLocation }: Locati
       </p>
 
       <div className="space-y-2">
-        {regionOptions.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            onClick={() => {
-              if (option.isDemoDataset) onDemoModeSelected();
-            }}
-            className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-2.5 text-left text-sm text-vault-offwhite/85 transition-colors hover:border-white/25 hover:bg-black/30"
-          >
-            {option.label}
-          </button>
-        ))}
+        {regionOptions
+          .filter((option) => option.isDemoDataset)
+          .map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => onRegionSelected(option.id)}
+              className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-2.5 text-left text-sm text-vault-offwhite/85 transition-colors hover:border-white/25 hover:bg-black/30"
+            >
+              {option.label}
+            </button>
+          ))}
       </div>
 
       <div className="flex gap-2">

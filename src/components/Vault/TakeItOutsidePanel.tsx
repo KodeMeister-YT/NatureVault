@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Ecosystem } from '../../types/ecosystem';
 import { LocationService, type LocationResult } from '../../services/LocationService';
-import type { DemoLocation } from '../../data/observations/demoLocations';
+import type { DemoLocation } from '../../data/observations/regionLocations';
 import { LocationSelector } from './LocationSelector';
 
 interface TakeItOutsidePanelProps {
@@ -12,12 +12,44 @@ interface TakeItOutsidePanelProps {
 
 type PanelState = 'idle' | 'resolving' | 'resolved' | 'unresolved';
 
+interface Coords {
+  latitude: number;
+  longitude: number;
+}
+
+/** Explore action: prefer the location's own deep link, else a maps search scoped to known coordinates (if any). */
+function buildExploreUrl(loc: DemoLocation, coords?: Coords): string {
+  if (loc.exploreUrl) return loc.exploreUrl;
+  if (coords) return LocationService.buildMapsSearchUrl(coords.latitude, coords.longitude, loc.name);
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name)}`;
+}
+
+/** Directions action: a maps directions deep link, scoped to known coordinates (if any) plus the location name. */
+function buildDirectionsUrl(loc: DemoLocation, coords?: Coords): string {
+  const destination = coords ? `${loc.name} near ${coords.latitude},${coords.longitude}` : loc.name;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+}
+
 export function TakeItOutsidePanel({ ecosystem, onClose, onStartWalk }: TakeItOutsidePanelProps) {
   const [state, setState] = useState<PanelState>('idle');
   const [result, setResult] = useState<LocationResult | null>(null);
-  const [showDemoLocations, setShowDemoLocations] = useState(false);
+  const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
 
-  const demoLocations: DemoLocation[] = LocationService.getFallbackLocations(ecosystem.type);
+  const regionOptions = LocationService.getManualRegionOptions();
+  const selectedRegionOption = selectedRegionId
+    ? regionOptions.find((option) => option.id === selectedRegionId)
+    : undefined;
+
+  /** Demo locations for the resolved-with-matchedRegion path, keyed to the region LocationService actually matched. */
+  const resolvedDemoLocations: DemoLocation[] =
+    result && result.status === 'resolved' && result.matchedRegion
+      ? LocationService.getFallbackLocations(ecosystem.type, result.matchedRegion.id)
+      : [];
+
+  /** Demo locations for the manual-selection path, keyed to whichever region the user clicked. */
+  const manualDemoLocations: DemoLocation[] = selectedRegionId
+    ? LocationService.getFallbackLocations(ecosystem.type, selectedRegionId)
+    : [];
 
   const runResolveLocation = async () => {
     setState('resolving');
@@ -30,11 +62,44 @@ export function TakeItOutsidePanel({ ecosystem, onClose, onStartWalk }: TakeItOu
     void runResolveLocation();
   };
 
+  const renderDemoLocationCard = (loc: DemoLocation, coords?: Coords) => (
+    <div key={loc.id} className="rounded-xl border border-white/10 bg-black/20 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-sm font-medium text-vault-offwhite">{loc.name}</p>
+        <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-vault-offwhite/70">
+          Demo location
+        </span>
+      </div>
+      <p className="text-xs text-vault-offwhite/50">
+        {loc.type} · {loc.distanceLabel}
+      </p>
+      <p className="mt-1.5 text-xs text-vault-offwhite/70">{loc.description}</p>
+      <div className="mt-2 flex gap-2">
+        <a
+          href={buildExploreUrl(loc, coords)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block rounded-full bg-vault-sage/20 px-3 py-1.5 text-xs font-semibold text-vault-sage-light hover:bg-vault-sage/30"
+        >
+          Explore
+        </a>
+        <a
+          href={buildDirectionsUrl(loc, coords)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold text-vault-offwhite/85 hover:border-white/40 hover:text-vault-offwhite"
+        >
+          Directions
+        </a>
+      </div>
+    </div>
+  );
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div className="glass-panel w-full max-w-lg rounded-2xl p-6">
         <div className="flex items-start justify-between">
-          <h2 className="font-display text-2xl text-vault-offwhite">Take It Outside</h2>
+          <h2 className="font-display text-2xl text-vault-offwhite">TAKE IT OUTSIDE</h2>
           <button
             type="button"
             onClick={onClose}
@@ -47,7 +112,7 @@ export function TakeItOutsidePanel({ ecosystem, onClose, onStartWalk }: TakeItOu
           </button>
         </div>
         <p className="mt-2 text-sm text-vault-offwhite/75">
-          You just explored a {ecosystem.typeLabel.toLowerCase()} digitally. Now find one near you.
+          You explored this ecosystem digitally. Now find something similar in the real world.
         </p>
 
         {state === 'idle' && (
@@ -72,6 +137,12 @@ export function TakeItOutsidePanel({ ecosystem, onClose, onStartWalk }: TakeItOu
 
         {state === 'resolved' && result && result.status !== 'unavailable' && result.status !== 'denied' && (
           <div className="mt-5 space-y-3">
+            {result.status === 'resolved' && (
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-offwhite/50">
+                Nearby Nature — Based on your location
+              </p>
+            )}
+
             {result.status === 'resolved' ? (
               <div className="rounded-xl border border-white/10 bg-black/20 p-3">
                 <p className="text-sm font-medium text-vault-offwhite">
@@ -100,21 +171,14 @@ export function TakeItOutsidePanel({ ecosystem, onClose, onStartWalk }: TakeItOu
               </div>
             )}
 
-            {result.status === 'resolved' && result.isWithinDemoRegion && (
+            {result.status === 'resolved' && result.matchedRegion && (
               <div className="space-y-2">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-offwhite/50">
-                  Example Portland-area locations
+                  Example {result.matchedRegion.label} locations
                 </p>
-                {demoLocations.map((loc) => (
-                  <div key={loc.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 p-3">
-                    <div>
-                      <p className="text-sm font-medium text-vault-offwhite">{loc.name}</p>
-                      <p className="text-xs text-vault-offwhite/50">
-                        {loc.type} · {loc.distanceLabel}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                {resolvedDemoLocations.map((loc) =>
+                  renderDemoLocationCard(loc, { latitude: result.latitude, longitude: result.longitude }),
+                )}
               </div>
             )}
           </div>
@@ -122,28 +186,20 @@ export function TakeItOutsidePanel({ ecosystem, onClose, onStartWalk }: TakeItOu
 
         {state === 'unresolved' && (
           <>
+            <p className="mt-4 text-sm text-vault-offwhite/75">We couldn't access your location.</p>
             <LocationSelector
-              onDemoModeSelected={() => setShowDemoLocations(true)}
+              onRegionSelected={(regionId) => setSelectedRegionId(regionId)}
               onRetryLocation={() => {
                 LocationService.clearCache();
                 void runResolveLocation();
               }}
             />
-            {showDemoLocations && (
+            {selectedRegionId && (
               <div className="mt-4 space-y-2">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-offwhite/50">
-                  Example Portland-area locations (demo data — not based on your location)
+                  Example {selectedRegionOption?.label ?? ''} locations
                 </p>
-                {demoLocations.map((loc) => (
-                  <div key={loc.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 p-3">
-                    <div>
-                      <p className="text-sm font-medium text-vault-offwhite">{loc.name}</p>
-                      <p className="text-xs text-vault-offwhite/50">
-                        {loc.type} · {loc.distanceLabel}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                {manualDemoLocations.map((loc) => renderDemoLocationCard(loc))}
               </div>
             )}
           </>

@@ -1,6 +1,8 @@
 import type { EnvironmentalObject } from '../../types/vault';
+import type { BiomeStyle } from '../../types/biome';
 import type { ObjectClickHandler } from '../../types/threeEvents';
 import { seededRange } from '../../utils/seededRandom';
+import { resolveBiomeStyle } from './resolveBiomeStyle';
 import { Tree } from './Tree';
 import { Rock } from './Rock';
 import { Mountain } from './Mountain';
@@ -23,9 +25,17 @@ import { FallenLog } from './FallenLog';
 import { Vine } from './Vine';
 import { TropicalFlower } from './TropicalFlower';
 import { TermiteMound } from './TermiteMound';
+import { Crab } from './Crab';
+import { Turtle } from './Turtle';
+import { Anemone } from './Anemone';
+import { Scorpion } from './Scorpion';
+import { Burrow } from './Burrow';
+import { Yucca } from './Yucca';
+import type { RockShape } from './Rock';
 
 interface EnvironmentalObjectRendererProps {
   object: EnvironmentalObject;
+  style: BiomeStyle;
   vegetationDensity: number;
   biodiversityLevel: number;
   developmentLevel: number;
@@ -36,10 +46,24 @@ interface EnvironmentalObjectRendererProps {
   onHover: (id: string | null) => void;
 }
 
-const WILDLIFE_KINDS = new Set(['bird', 'animal', 'frog']);
+const WILDLIFE_KINDS = new Set(['bird', 'animal', 'frog', 'crab', 'turtle', 'scorpion']);
+
+// Vegetation-linked scenery objects thin out with vegetationDensity the same way
+// WILDLIFE_KINDS thins out with biodiversityLevel (see seededDropoutThreshold below).
+const VEGETATION_DENSITY_KINDS: Set<string> = new Set(['cactus', 'coral', 'tropicalFlower', 'termiteMound', 'anemone']);
+
+// Shared seeded "dropout threshold" for a given position — stable across renders so the
+// same object always disappears/reappears at the same density/biodiversity level rather
+// than flickering, while different objects (different positions) drop out at different
+// points. Used by both WILDLIFE_KINDS (gated by biodiversityLevel) and
+// VEGETATION_DENSITY_KINDS (gated by vegetationDensity).
+export function seededDropoutThreshold(position: [number, number, number]): number {
+  return seededRange(position[0] * 13 + position[2] * 7, 0.15, 0.55);
+}
 
 export function EnvironmentalObjectRenderer({
   object,
+  style,
   vegetationDensity,
   biodiversityLevel,
   developmentLevel,
@@ -64,8 +88,13 @@ export function EnvironmentalObjectRenderer({
   // this is what makes switching between Continue as Is and Protect & Restore
   // read as a real change in the world rather than a number changing off-screen.
   if (WILDLIFE_KINDS.has(object.kind)) {
-    const threshold = seededRange(object.position[0] * 13 + object.position[2] * 7, 0.15, 0.55);
-    if (biodiversityLevel < threshold) return null;
+    if (biodiversityLevel < seededDropoutThreshold(object.position)) return null;
+  }
+
+  // Vegetation-linked scenery (cacti, coral, tropical flowers, termite mounds, anemones)
+  // thins out the same way, but gated by vegetationDensity instead of biodiversityLevel.
+  if (VEGETATION_DENSITY_KINDS.has(object.kind)) {
+    if (vegetationDensity < seededDropoutThreshold(object.position)) return null;
   }
 
   switch (object.kind) {
@@ -75,6 +104,7 @@ export function EnvironmentalObjectRenderer({
           position={object.position}
           seed={object.position[0] * 3 + object.position[2]}
           variant={object.variant === 'broadleaf' ? 'broadleaf' : 'conifer'}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
           selected={selected}
           dimmed={dimmed}
           highlighted={highlighted}
@@ -87,6 +117,7 @@ export function EnvironmentalObjectRenderer({
           position={object.position}
           seed={object.position[0] * 3 + object.position[2]}
           variant={object.variant === 'conifer' ? 'conifer' : 'broadleaf'}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
           selected={selected}
           dimmed={dimmed}
           highlighted={highlighted}
@@ -108,28 +139,47 @@ export function EnvironmentalObjectRenderer({
     case 'termiteMound':
       return <TermiteMound position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'plant':
+      if (object.variant === 'yucca') {
+        return <Yucca position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+      }
       return (
         <>
           <MeadowPatch
             position={object.position}
             vegetationDensity={vegetationDensity}
             color={object.biodiversityCategory === 'pollinators' ? '#c9b23c' : '#8fae5c'}
+            colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
             selected={selected}
             dimmed={dimmed}
             {...commonHandlers}
           />
           {object.biodiversityCategory === 'pollinators' && (
-            <Pollinator center={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />
+            <Pollinator
+              center={object.position}
+              colorOverride={resolveBiomeStyle(style, 'pollinator', object.variant)?.colorPrimary}
+              selected={selected}
+              dimmed={dimmed}
+              {...commonHandlers}
+            />
           )}
         </>
       );
     case 'pollinator':
-      return <Pollinator center={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+      return (
+        <Pollinator
+          center={object.position}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
     case 'reed':
       return (
         <ReedCluster
           position={object.position}
           vegetationDensity={vegetationDensity}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
           selected={selected}
           dimmed={dimmed}
           {...commonHandlers}
@@ -152,7 +202,18 @@ export function EnvironmentalObjectRenderer({
     case 'fungi':
       return <Fungi position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'rock':
-      return <Rock position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+      return (
+        <Rock
+          position={object.position}
+          shape={
+            object.variant === 'slab' || object.variant === 'layered' ? (object.variant as RockShape) : undefined
+          }
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
     case 'fern':
       return (
         <Fern
@@ -189,6 +250,48 @@ export function EnvironmentalObjectRenderer({
       return <DryRiverbed position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'coral':
       return <Coral position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
+    case 'anemone':
+      return (
+        <Anemone
+          position={object.position}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'crab':
+      return (
+        <Crab
+          position={object.position}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'turtle':
+      return (
+        <Turtle
+          position={object.position}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'scorpion':
+      return (
+        <Scorpion
+          position={object.position}
+          colorOverride={resolveBiomeStyle(style, object.kind, object.variant)?.colorPrimary}
+          selected={selected}
+          dimmed={dimmed}
+          {...commonHandlers}
+        />
+      );
+    case 'burrow':
+      return <Burrow position={object.position} selected={selected} dimmed={dimmed} {...commonHandlers} />;
     case 'fishSchool':
       return (
         <FishSchool

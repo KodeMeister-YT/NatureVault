@@ -1,4 +1,10 @@
-import { getDemoLocations, type DemoLocation } from '../data/observations/demoLocations';
+import {
+  regions,
+  matchRegion,
+  getRegionByEcosystemType,
+  type DemoLocation,
+  type RegionRecord,
+} from '../data/observations/regionLocations';
 import type { ManualRegionOption } from '../types/biome';
 
 export interface GeoResult {
@@ -16,7 +22,9 @@ export interface ResolvedLocation {
   country?: string;
   /** Deep link to a maps search scoped to the real resolved coordinates — no key, no fabricated POIs. */
   mapsSearchUrl: string;
-  /** True only when the resolved location is within the curated demo dataset's region (Portland area). */
+  /** The region dataset (contained match, or nearest-centroid match) for these coordinates, or null if the region list is empty. */
+  matchedRegion: RegionRecord | null;
+  /** @deprecated derived as matchedRegion !== null; kept for compatibility */
   isWithinDemoRegion: boolean;
 }
 
@@ -29,24 +37,6 @@ export interface UnresolvedLocation {
 }
 
 export type LocationResult = ResolvedLocation | UnresolvedLocation;
-
-// Rough bounding box around the Portland, Oregon metro/coast area already
-// covered by the curated demoLocations dataset.
-const PORTLAND_BOUNDING_BOX = {
-  minLat: 45.2,
-  maxLat: 45.75,
-  minLng: -123.4,
-  maxLng: -122.3,
-};
-
-function isWithinPortlandBoundingBox(latitude: number, longitude: number): boolean {
-  return (
-    latitude >= PORTLAND_BOUNDING_BOX.minLat &&
-    latitude <= PORTLAND_BOUNDING_BOX.maxLat &&
-    longitude >= PORTLAND_BOUNDING_BOX.minLng &&
-    longitude <= PORTLAND_BOUNDING_BOX.maxLng
-  );
-}
 
 // In-memory session cache — re-opening TakeItOutsidePanel without a page reload
 // should not re-request geolocation permission or re-fetch reverse-geocoding.
@@ -110,6 +100,7 @@ export const LocationService = {
         }
         const data = await response.json();
 
+        const matchedRegion = matchRegion(latitude, longitude);
         const result: ResolvedLocation = {
           status: 'resolved',
           latitude,
@@ -118,7 +109,8 @@ export const LocationService = {
           region: data.principalSubdivision || undefined,
           country: data.countryName || undefined,
           mapsSearchUrl: LocationService.buildMapsSearchUrl(latitude, longitude),
-          isWithinDemoRegion: isWithinPortlandBoundingBox(latitude, longitude),
+          matchedRegion,
+          isWithinDemoRegion: matchedRegion !== null,
         };
         return result;
       } catch {
@@ -145,13 +137,17 @@ export const LocationService = {
   },
 
   /** Only for the explicit manual-selector fallback — clearly a curated demo list, never labeled "near you". */
-  getFallbackLocations(ecosystemType: string): DemoLocation[] {
-    return getDemoLocations(ecosystemType);
+  getFallbackLocations(ecosystemType: string, regionId?: string): DemoLocation[] {
+    return getRegionByEcosystemType(ecosystemType, regionId);
   },
 
   getManualRegionOptions(): ManualRegionOption[] {
     return [
-      { id: 'pnw-demo', label: 'Pacific Northwest (demo)', isDemoDataset: true },
+      ...regions.map((region): ManualRegionOption => ({
+        id: region.id,
+        label: region.label,
+        isDemoDataset: true,
+      })),
       { id: 'search-city', label: 'Explore near a city you type', isDemoDataset: false },
     ];
   },

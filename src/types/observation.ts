@@ -13,6 +13,14 @@ export interface Observation {
   timestamp: number;
   notes: string;
   category: BiodiversityCategory | 'general';
+
+  // --- NEW optional fields (additive) ---
+  isCaptured?: boolean;             // true only for explicit "Save to Nature Journal" actions
+  userNote?: string;                // the user's own optional free-text note at capture time
+  objectName?: string;              // denormalized so the Journal never needs a stale object lookup
+  ecosystemName?: string;
+  year?: number;                    // the year being viewed at capture time
+  ecologicalSignificance?: string;  // snapshot of object.ecologicalRole at capture time
 }
 
 export interface ConservationAction {

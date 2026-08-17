@@ -8,7 +8,9 @@ interface ObjectInspectorProps {
   showConnections: boolean;
 }
 
-const kindLabel: Record<string, string> = {
+// Exported (rather than kept module-private) so tests can assert every `ObjectKind`
+// value authored across the `vaults` map has a corresponding label entry here.
+export const kindLabel: Record<string, string> = {
   tree: 'Tree',
   plant: 'Plant / Meadow',
   reed: 'Wetland Reed',
@@ -38,6 +40,11 @@ const kindLabel: Record<string, string> = {
   coral: 'Coral',
   fishSchool: 'Fish School',
   termiteMound: 'Termite Mound',
+  crab: 'Crab',
+  turtle: 'Sea Turtle',
+  anemone: 'Sea Anemone',
+  scorpion: 'Scorpion',
+  burrow: 'Animal Burrow',
 };
 
 const trophicRoleLabel: Record<string, string> = {
@@ -46,6 +53,30 @@ const trophicRoleLabel: Record<string, string> = {
   'secondary-consumer': 'Secondary Consumer',
   decomposer: 'Decomposer',
 };
+
+// Small, best-effort keyword -> emoji lookup for the ecosystem-web chain nodes.
+// Falls back to a generic link emoji when nothing matches.
+const CHAIN_NODE_EMOJI: Array<[RegExp, string]> = [
+  [/tree|canopy|kapok|acacia|forest/i, '🌳'],
+  [/bird|toucan|heron|roller|macaw/i, '🐦'],
+  [/fish|salmon|fry/i, '🐟'],
+  [/bee|pollinat|butterfly/i, '🐝'],
+  [/predator|lion|hawk|eagle/i, '🦅'],
+  [/fung|decompos/i, '🍄'],
+  [/flower|wildflower|heliconia|bloom/i, '🌼'],
+  [/insect|bug/i, '🐛'],
+  [/coral/i, '🪸'],
+  [/algae/i, '🟢'],
+  [/water|reed|marsh|mangrove/i, '💧'],
+  [/grass|grazing|herd|zebra/i, '🌾'],
+  [/crab/i, '🦀'],
+  [/soil|nutrient/i, '🪨'],
+];
+
+function emojiForChainNode(node: string): string {
+  const match = CHAIN_NODE_EMOJI.find(([pattern]) => pattern.test(node));
+  return match ? match[1] : '🔗';
+}
 
 export function ObjectInspector({ object, year, onClose, showConnections }: ObjectInspectorProps) {
   const categoryMeta = object.biodiversityCategory
@@ -139,15 +170,20 @@ export function ObjectInspector({ object, year, onClose, showConnections }: Obje
 
         {showConnections && object.connection && (
           <section>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-vault-offwhite/50">
-              Ecosystem connections
+            <p className="text-xs font-bold uppercase tracking-wide text-vault-gold">
+              🕸️ Ecosystem Web
             </p>
             <div className="mt-2 flex flex-col gap-1">
               {object.connection.chain.map((node, i) => (
-                <div key={node} className="flex items-center gap-2">
-                  <span className="text-sm text-vault-offwhite/85">{node}</span>
+                <div key={node} className="flex flex-col items-start">
+                  <span className="text-sm text-vault-offwhite/85">
+                    <span aria-hidden="true">{emojiForChainNode(node)}</span> {node}
+                  </span>
                   {i < object.connection!.chain.length - 1 && (
-                    <span aria-hidden="true" className="text-vault-sage-light">
+                    <span
+                      aria-hidden="true"
+                      className="motion-safe:animate-pulse pl-1 text-lg font-bold text-vault-gold"
+                    >
                       ↓
                     </span>
                   )}

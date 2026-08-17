@@ -10,6 +10,8 @@ interface MeadowPatchProps {
   count?: number;
   vegetationDensity: number; // 0-1
   color?: string;
+  /** Biome-specific base (unselected) color, resolved via resolveBiomeStyle. Takes precedence over `color` when present; ignored when selected. */
+  colorOverride?: string;
   selected?: boolean;
   dimmed?: boolean;
   onClick?: ObjectClickHandler;
@@ -24,6 +26,7 @@ export function MeadowPatch({
   count = 60,
   vegetationDensity,
   color = '#8fae5c',
+  colorOverride,
   selected,
   dimmed,
   onClick,
@@ -67,7 +70,7 @@ export function MeadowPatch({
       <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
         <coneGeometry args={[0.06, 1, 4]} />
         <meshStandardMaterial
-          color={selected ? '#c7e0a0' : color}
+          color={selected ? '#c7e0a0' : colorOverride ?? color}
           roughness={0.9}
           transparent
           opacity={dimmed ? 0.2 : 1}
