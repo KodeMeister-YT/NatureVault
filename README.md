@@ -21,14 +21,14 @@ NatureVault transforms environmental information into an **interactive place**.
 
 Users can:
 
-* 🌲 Explore different ecosystems
-* 🕰️ Travel through time
-* 🔍 Interact with environmental objects
-* 🐦 Discover represented species
-* 📊 View ecosystem health indicators
-* 🔀 Compare possible future scenarios
-* 🧠 Track their exploration in **My Vault**
-* 📚 Browse an environmental archive
+- 🌲 Explore different ecosystems
+- 🕰️ Travel through time
+- 🔍 Interact with environmental objects
+- 🐦 Discover represented species
+- 📊 View ecosystem health indicators
+- 🔀 Compare possible future scenarios
+- 🧠 Track their exploration in **My Vault**
+- 📚 Browse an environmental archive
 
 ---
 
@@ -62,142 +62,245 @@ The selected year acts as a central control. Changing it updates the represented
 
 The timeline allows users to move between historical conditions, the present, and possible future scenarios.
 
-```mermaid
-flowchart TD
-    A[User selects year] --> B[Update timeline state]
-    B --> C[Load ecosystem state]
-    C --> D[Update environmental values]
-    D --> E[Update 3D environment]
-    E --> F[Update information panels]
-    F --> G[User observes change]
-```
-
 For example:
 
-**1980 → 1995 → 2010 → 2026 → 2050**
+```
+1980 → 1995 → 2010 → 2026 → 2050
+```
 
-The future scenarios are **illustrative simulations, not scientific forecasts**.
+As the selected year changes, the ecosystem representation responds accordingly.
+
+> **Note:** Future scenarios are illustrative simulations and are not intended to be scientific forecasts.
 
 ---
 
 ## 🎮 User Journey
 
-```mermaid
-flowchart LR
-    A[Discover] --> B[Select Ecosystem]
-    B --> C[Enter 3D Vault]
-    C --> D[Explore]
-    D --> E[Discover]
-    E --> F[Travel Through Time]
-    F --> G[Compare Futures]
-    G --> H[Remember in My Vault]
-```
-
 The experience is built around four simple actions:
 
-**Enter → Explore → Compare → Understand**
+```mermaid
+flowchart LR
+    A[Enter] --> B[Explore] --> C[Compare] --> D[Understand]
+```
 
 ---
 
-# 📸 Experience
+## 🌲 Interactive 3D Ecosystems
 
-### Landing
+The **3D Vault** is the core of NatureVault.
 
-The landing experience introduces NatureVault as an interactive time machine for ecosystems.
+Users can enter an ecosystem and explore it directly rather than viewing it as a static image.
 
-![NatureVault Landing](docs/screenshots/landing.png)
+The environment can contain:
 
-### Explore Ecosystems
+- 🌳 Vegetation
+- 💧 Water systems
+- 🐦 Wildlife
+- 🪨 Terrain
+- 🌿 Habitats
+- 🏠 Human infrastructure
+- 🌊 Environmental features
 
-Users can browse and filter ecosystems before entering their individual Vaults.
-
-![Explore Ecosystems](docs/screenshots/explore.png)
-
-### Environmental Archive
-
-The archive preserves ecosystem snapshots and highlights how environments change over time.
-
-![Environmental Archive](docs/screenshots/archive.png)
-
-### My Vault
-
-Exploration history, discovered species, observations and learning progress are collected in the user's personal Vault.
-
-![My Vault](docs/screenshots/my-vault.png)
-
-### 3D Ecosystem Vault
-
-The core experience is an explorable 3D ecosystem where users can move around and interact with the environment.
-
-![3D Ecosystem](docs/screenshots/3d-vault.png)
-
-### Interactive Discovery
-
-Clicking objects reveals contextual information about what they are, why they matter, their habitat, changes over time, environmental pressures and related species.
-
-![Interactive Discovery](docs/screenshots/discovery.png)
-
-### Ecosystem Health
-
-The application provides an illustrative overview of biodiversity, habitat, water, vegetation and human pressure.
-
-![Ecosystem Health](docs/screenshots/ecosystem-health.png)
+The 3D environment acts as both a visual simulation and an interactive learning interface.
 
 ---
 
-## 🌱 Future Scenarios
+## 🔍 Object Discovery
 
-NatureVault allows users to compare possible outcomes such as:
+Environmental objects can be selected to reveal contextual information.
+
+This allows users to move from:
+
+**"What is this?"**
+
+to
+
+**"Why does this matter?"**
+
+---
+
+## 📊 Ecosystem Health
+
+NatureVault provides an illustrative ecosystem-health interface based on several environmental dimensions.
+
+These dimensions provide users with a simplified way to understand the overall condition of an ecosystem.
+
+> **Note:** These indicators are educational simulation values, not scientific assessments.
+
+---
+
+## 🔀 Future Scenario Comparison
+
+NatureVault allows users to compare possible future scenarios, such as:
 
 **Continue As Is** vs **Protect & Restore**
 
-The goal isn't to predict exactly what will happen.
+The goal is not to predict exactly what will happen.
 
-Instead, the simulation demonstrates a simple idea:
+Instead, the simulation demonstrates:
 
-> **Different choices can lead to different possible futures.**
+> Different choices can lead to different possible futures.
 
 ---
 
-## 🛠️ Tech Stack
+## 🧠 My Vault
 
-| Technology          | Purpose                            |
-| ------------------- | ---------------------------------- |
-| **React**           | Frontend application               |
-| **TypeScript**      | Type-safe development              |
-| **Vite**            | Development & build tooling        |
-| **CSS / HTML**      | UI and visual design               |
-| **3D Rendering**    | Interactive ecosystem environments |
-| **Kiro IDE**        | Primary development environment    |
-| **Claude Sonnet 5** | AI-assisted development            |
+**My Vault** acts as the user's personal environmental memory.
+
+Exploration can contribute to:
+
+- Ecosystems explored
+- Species discovered
+- Observations
+- Exploration history
+- Environmental learning
+- Actions learned
+
+This turns NatureVault from a simple information website into a progressive exploration experience.
+
+---
+
+## 📚 Ecosystem Data Flow
+
+The ecosystem data acts as the foundation for multiple parts of the application.
+
+```mermaid
+flowchart TD
+    A[Ecosystem Data] --> B[Discover]
+    A --> C[Archive]
+    A --> D[Ecosystem Vault]
+    A --> E[Impact]
+    A --> F[My Vault]
+```
+
+This allows different parts of the application to respond to the same underlying ecosystem information.
+
+---
+
+## 🧩 Application Structure
+
+NatureVault follows a component-based React architecture.
+
+```
+App
+│
+├── Navigation
+│
+├── Landing
+│
+├── Discover
+│   ├── Search
+│   ├── Filters
+│   └── Ecosystem Cards
+│
+├── Archive
+│   └── Ecosystem Information
+│
+├── My Vault
+│   ├── Exploration History
+│   ├── Discovery Stats
+│   └── Learning Progress
+│
+├── Impact
+│   ├── Ecosystem Statistics
+│   └── Suggested Actions
+│
+└── Ecosystem Vault
+    ├── Time Machine
+    ├── 3D Environment
+    ├── Object Interaction
+    ├── Information Panels
+    ├── Biodiversity
+    ├── Story Mode
+    └── Scenario Comparison
+```
+
+---
+
+## 🌐 Overall Architecture
+
+```mermaid
+flowchart TD
+    App[App] --> Nav[Navigation]
+    App --> Landing[Landing]
+    App --> Discover[Discover]
+    App --> Archive[Archive]
+    App --> Vault[My Vault]
+    App --> Impact[Impact]
+    App --> EcoVault[Ecosystem Vault]
+
+    Discover --> Search[Search]
+    Discover --> Filters[Filters]
+    Discover --> Cards[Ecosystem Cards]
+
+    Archive --> ArchiveInfo[Ecosystem Information]
+
+    Vault --> History[Exploration History]
+    Vault --> Stats[Discovery Stats]
+    Vault --> Progress[Learning Progress]
+
+    Impact --> ImpactStats[Ecosystem Statistics]
+    Impact --> Actions[Suggested Actions]
+
+    EcoVault --> Time[Time Machine]
+    EcoVault --> ThreeD[3D Environment]
+    EcoVault --> Interaction[Object Interaction]
+    EcoVault --> Panels[Information Panels]
+    EcoVault --> Bio[Biodiversity]
+    EcoVault --> Story[Story Mode]
+    EcoVault --> Scenario[Scenario Comparison]
+```
 
 ---
 
 ## 🤖 AI-Assisted Development
 
-NatureVault was developed using an **AI-assisted development workflow**.
+NatureVault was developed using an AI-assisted development workflow.
 
-**Kiro IDE** was used as the primary development environment, while **Claude Sonnet 5** was used throughout development to assist with:
+### Kiro IDE
 
-* React & TypeScript implementation
-* UI/UX development
-* Component creation
-* Interaction logic
-* 3D environment development
-* Debugging
-* Feature iteration
-* Code refinement
+Kiro IDE was used as the primary development environment for building and iterating on the project.
 
-The generated implementations were continuously tested, modified and refined during development.
+### Claude Sonnet 5
+
+Claude Sonnet 5 was used throughout development as an AI development assistant.
+
+AI assistance was used for:
+
+- React and TypeScript implementation
+- UI/UX development
+- Component creation
+- Interaction logic
+- 3D environment development
+- Debugging
+- Feature iteration
+- Code refinement
+- Design experimentation
+
+The generated implementations were continuously tested, modified and refined throughout development.
 
 ---
 
-## 🚀 Run Locally
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| React | Frontend application |
+| TypeScript | Type-safe development |
+| Vite | Development and build tooling |
+| HTML / CSS | UI structure and styling |
+| 3D Rendering | Interactive ecosystem environments |
+| Kiro IDE | Primary development environment |
+| Claude Sonnet 5 | AI-assisted development |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-* Node.js
-* npm
+- Node.js
+- npm
 
 ### Installation
 
@@ -219,20 +322,30 @@ Then open the local URL provided by Vite.
 
 ## ⚠️ Disclaimer
 
-NatureVault is an **educational interactive simulation**.
+NatureVault is an educational interactive simulation.
 
-The ecosystem health values, biodiversity indicators, species representations and future scenarios are illustrative and should **not** be interpreted as scientific measurements, predictions or environmental assessments.
+The ecosystem health values, biodiversity indicators, species representations and future scenarios shown within the application are illustrative and should not be interpreted as scientific measurements, predictions or environmental assessments.
 
-The goal is to make environmental change easier to **visualize, explore and understand**.
+The goal is to make environmental change easier to:
+
+**Visualize → Explore → Understand**
 
 ---
 
-## 🌿 Vision
+## 🌱 Vision
 
 NatureVault asks:
 
-> **What if people could experience environmental change instead of simply reading about it?**
+> What if people could experience environmental change instead of simply reading about it?
 
-By combining **3D exploration, time-based storytelling, environmental data and interactive discovery**, NatureVault turns environmental change from something people simply read about into something they can **step inside**.
+By combining:
 
-### **NatureVault — Step inside nature.**
+**3D Exploration + Time-Based Storytelling + Environmental Data + Interactive Discovery**
+
+NatureVault turns environmental change from something people simply read about into something they can step inside.
+
+---
+
+### 🌿 NatureVault
+
+*Step inside nature. Travel through time. See what changes.*
