@@ -1,351 +1,205 @@
-# 🌿 NatureVault
+The CivicShield Pipeline
+Stage	What happens
+📄 Document	PDF, DOCX or TXT
+🔍 Extraction	Text and structure are extracted
+🧩 Clauses	Important sections are identified
+⚖️ Legal Analysis	Potential issues are detected
+📚 Evidence	Relevant legal sources are retrieved
+📊 Risk	Severity and confidence are calculated
+✅ Action	Concrete next steps are generated
+🧭 Product Flow
+🛡️ Three CivicShield Verticals
+🏠 TenantShield
 
-### Step inside nature. Travel through time. See what changes.
+Rental agreements, landlord notices, deposits, termination clauses and housing-related documents.
 
-**NatureVault** is an interactive environmental time machine that lets users explore ecosystems in 3D, travel through different points in time, discover environmental features and species, and compare possible future scenarios.
+💼 WorkShield
 
-Instead of only presenting environmental change through statistics, NatureVault lets users **experience the ecosystem itself**.
+Employment contracts, termination notices, notice periods and restrictive clauses.
 
-> **We don't want you to just read about what we're losing.
-> We want you to step inside it.**
+🛍️ ConsumerShield
 
----
+Purchase agreements, warranty terms, refunds, final-sale clauses and consumer disputes.
 
-## 🌎 The Idea
+🔎 Show Me Why
 
-Environmental change is often reduced to numbers and charts. While useful, these can be difficult to visualize or connect with.
+CivicShield doesn't simply say:
 
-NatureVault transforms environmental information into an **interactive place**.
+"This clause may be a problem."
 
-### Past → Present → Future
+It traces the finding back to its evidence.
 
-Users can:
+Every finding can expose:
 
-- 🌲 Explore different ecosystems
-- 🕰️ Travel through time
-- 🔍 Interact with environmental objects
-- 🐦 Discover represented species
-- 📊 View ecosystem health indicators
-- 🔀 Compare possible future scenarios
-- 🧠 Track their exploration in **My Vault**
-- 📚 Browse an environmental archive
+Original clause
+Section / page
+Detected issue
+Matched legal source
+Reasoning
+Fact vs inference
+Confidence level
 
----
+This creates an auditable evidence trail rather than an unexplained AI answer.
 
-## ⚙️ How It Works
+📊 Risk & Evidence
 
-The core experience connects ecosystem data, application state, and a 3D environment.
+CivicShield categorizes findings into four levels:
 
-```mermaid
-flowchart LR
-    A[Ecosystem Data] --> B[React Application]
-    B --> C[Application State]
+Demo distribution shown above is from the sample TenantShield analysis.
 
-    C --> D[Selected Year]
-    C --> E[Exploration Data]
-    C --> F[Scenario]
+📄 Document Intelligence
 
-    D --> G[3D Ecosystem]
-    E --> H[My Vault]
-    F --> G
+CivicShield uses a split-screen interface to connect findings directly to their source.
 
-    G --> I[Interactive Environment]
-    I --> J[Object Discovery]
-    J --> K[Environmental Information]
-```
+Clicking a finding highlights the corresponding clause in the original document.
 
-The selected year acts as a central control. Changing it updates the represented ecosystem state, allowing users to observe how vegetation, water, biodiversity, habitat and other elements change over time.
+⚡ Action Plans
 
----
+Instead of stopping at:
 
-## 🕰️ The Time Machine
+"This may be concerning."
 
-The timeline allows users to move between historical conditions, the present, and possible future scenarios.
+CivicShield turns findings into concrete steps.
 
-For example:
+Each action can be checked, sourced, and saved for later.
 
-```
-1980 → 1995 → 2010 → 2026 → 2050
-```
+🔮 Scenario Simulator
+What happens if...?
 
-As the selected year changes, the ecosystem representation responds accordingly.
+Users can explore hypothetical scenarios based on their document.
 
-> **Note:** Future scenarios are illustrative simulations and are not intended to be scientific forecasts.
+The simulator distinguishes known facts, possible outcomes, and uncertainty rather than presenting predictions as certainty.
 
----
+✉️ Response Generator
 
-## 🎮 User Journey
+CivicShield can transform a finding into an editable professional response.
 
-The experience is built around four simple actions:
+The user remains in control of the final response.
 
-```mermaid
-flowchart LR
-    A[Enter] --> B[Explore] --> C[Compare] --> D[Understand]
-```
+🗄️ Evidence Vault
 
----
+Important findings, responses and notes can be saved locally.
 
-## 🌲 Interactive 3D Ecosystems
+No backend database is required for the MVP.
 
-The **3D Vault** is the core of NatureVault.
+🏗️ Architecture
+🧠 Why the Architecture Is Different
 
-Users can enter an ecosystem and explore it directly rather than viewing it as a static image.
+The current hackathon implementation deliberately uses a deterministic rule-based legal analysis engine rather than a live LLM call.
 
-The environment can contain:
+This gives CivicShield:
 
-- 🌳 Vegetation
-- 💧 Water systems
-- 🐦 Wildlife
-- 🪨 Terrain
-- 🌿 Habitats
-- 🏠 Human infrastructure
-- 🌊 Environmental features
+Predictable results
+No hallucinated citations
+No API dependency
+Instant Demo Mode
+Reproducible analysis
+Structured outputs
 
-The 3D environment acts as both a visual simulation and an interactive learning interface.
+The architecture is still designed so an LLM-assisted analysis layer can be introduced later without replacing downstream components.
 
----
+🛠️ Tech Stack
+Layer	Technology
+Framework	Next.js 16
+UI	React 19
+Language	TypeScript
+Styling	Tailwind CSS v4
+Validation	Zod
+PDF Parsing	pdf-parse
+DOCX Parsing	Mammoth
+Icons	Lucide React
+Storage	sessionStorage / localStorage
+Legal Retrieval	Custom RAG provider
+Analysis	Deterministic rule engine
+🔐 Privacy & Safety
 
-## 🔍 Object Discovery
+CivicShield is designed around a simple principle:
 
-Environmental objects can be selected to reveal contextual information.
+Legal AI should explain its reasoning instead of pretending to be certain.
 
-This allows users to move from:
+The system:
 
-**"What is this?"**
+Does not persist uploaded documents on a backend
+Validates files before processing
+Separates facts from inference
+Shows confidence levels
+Requires legal-source grounding
+Avoids fabricated citations
+Clearly communicates uncertainty
+Frames itself as informational guidance, not legal representation
+🧪 Demo Mode
 
-to
+Want to try CivicShield without uploading anything?
 
-**"Why does this matter?"**
+Visit:
 
----
+/demo
 
-## 📊 Ecosystem Health
+Demo Mode contains three fictional documents:
 
-NatureVault provides an illustrative ecosystem-health interface based on several environmental dimensions.
+TenantShield · WorkShield · ConsumerShield
 
-These dimensions provide users with a simplified way to understand the overall condition of an ecosystem.
+All three use the same analysis pipeline as uploaded documents and are precomputed for a reliable live demonstration.
 
-> **Note:** These indicators are educational simulation values, not scientific assessments.
+📸 Screenshots
+Landing Page
 
----
+Document Upload
 
-## 🔀 Future Scenario Comparison
+Demo Mode
 
-NatureVault allows users to compare possible future scenarios, such as:
+Analysis Dashboard
 
-**Continue As Is** vs **Protect & Restore**
+Scenario Simulator
 
-The goal is not to predict exactly what will happen.
+Response Generator
 
-Instead, the simulation demonstrates:
+Action Plan
 
-> Different choices can lead to different possible futures.
-
----
-
-## 🧠 My Vault
-
-**My Vault** acts as the user's personal environmental memory.
-
-Exploration can contribute to:
-
-- Ecosystems explored
-- Species discovered
-- Observations
-- Exploration history
-- Environmental learning
-- Actions learned
-
-This turns NatureVault from a simple information website into a progressive exploration experience.
-
----
-
-## 📚 Ecosystem Data Flow
-
-The ecosystem data acts as the foundation for multiple parts of the application.
-
-```mermaid
-flowchart TD
-    A[Ecosystem Data] --> B[Discover]
-    A --> C[Archive]
-    A --> D[Ecosystem Vault]
-    A --> E[Impact]
-    A --> F[My Vault]
-```
-
-This allows different parts of the application to respond to the same underlying ecosystem information.
-
----
-
-## 🧩 Application Structure
-
-NatureVault follows a component-based React architecture.
-
-```
-App
-│
-├── Navigation
-│
-├── Landing
-│
-├── Discover
-│   ├── Search
-│   ├── Filters
-│   └── Ecosystem Cards
-│
-├── Archive
-│   └── Ecosystem Information
-│
-├── My Vault
-│   ├── Exploration History
-│   ├── Discovery Stats
-│   └── Learning Progress
-│
-├── Impact
-│   ├── Ecosystem Statistics
-│   └── Suggested Actions
-│
-└── Ecosystem Vault
-    ├── Time Machine
-    ├── 3D Environment
-    ├── Object Interaction
-    ├── Information Panels
-    ├── Biodiversity
-    ├── Story Mode
-    └── Scenario Comparison
-```
-
----
-
-## 🌐 Overall Architecture
-
-```mermaid
-flowchart TD
-    App[App] --> Nav[Navigation]
-    App --> Landing[Landing]
-    App --> Discover[Discover]
-    App --> Archive[Archive]
-    App --> Vault[My Vault]
-    App --> Impact[Impact]
-    App --> EcoVault[Ecosystem Vault]
-
-    Discover --> Search[Search]
-    Discover --> Filters[Filters]
-    Discover --> Cards[Ecosystem Cards]
-
-    Archive --> ArchiveInfo[Ecosystem Information]
-
-    Vault --> History[Exploration History]
-    Vault --> Stats[Discovery Stats]
-    Vault --> Progress[Learning Progress]
-
-    Impact --> ImpactStats[Ecosystem Statistics]
-    Impact --> Actions[Suggested Actions]
-
-    EcoVault --> Time[Time Machine]
-    EcoVault --> ThreeD[3D Environment]
-    EcoVault --> Interaction[Object Interaction]
-    EcoVault --> Panels[Information Panels]
-    EcoVault --> Bio[Biodiversity]
-    EcoVault --> Story[Story Mode]
-    EcoVault --> Scenario[Scenario Comparison]
-```
-
----
-
-## 🤖 AI-Assisted Development
-
-NatureVault was developed using an AI-assisted development workflow.
-
-### Kiro IDE
-
-Kiro IDE was used as the primary development environment for building and iterating on the project.
-
-### Claude Sonnet 5
-
-Claude Sonnet 5 was used throughout development as an AI development assistant.
-
-AI assistance was used for:
-
-- React and TypeScript implementation
-- UI/UX development
-- Component creation
-- Interaction logic
-- 3D environment development
-- Debugging
-- Feature iteration
-- Code refinement
-- Design experimentation
-
-The generated implementations were continuously tested, modified and refined throughout development.
-
----
-
-## 🛠️ Tech Stack
-
-| Technology | Purpose |
-|---|---|
-| React | Frontend application |
-| TypeScript | Type-safe development |
-| Vite | Development and build tooling |
-| HTML / CSS | UI structure and styling |
-| 3D Rendering | Interactive ecosystem environments |
-| Kiro IDE | Primary development environment |
-| Claude Sonnet 5 | AI-assisted development |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js
-- npm
-
-### Installation
-
-```bash
-git clone <repository-url>
-cd naturevault
+⚙️ Getting Started
+git clone https://github.com/KodeMeister-YT/CivicShield.git
+cd CivicShield
 npm install
-```
-
-### Start Development Server
-
-```bash
 npm run dev
-```
 
-Then open the local URL provided by Vite.
+Open:
 
----
+http://localhost:3000
+Useful routes
+/             → Landing page
+/demo         → Instant demo
+/analyze      → Upload a document
+/vault        → Evidence Vault
+Production
+npm run build
+npm run lint
+⚠️ Known Limitations
+Clause detection is rule-based rather than LLM-powered.
+Current legal sources are federal-level and illustrative.
+State and local jurisdiction differences are not fully modeled.
+Scanned/image-only PDFs are not OCR'd.
+No authentication or multi-user persistence.
+Evidence Vault is browser-local.
+🔮 What's Next?
 
-## ⚠️ Disclaimer
+Future versions could introduce:
 
-NatureVault is an educational interactive simulation.
+LLM-assisted clause interpretation
+OCR for scanned documents
+State/local jurisdiction awareness
+Live legal databases
+Embedding-based retrieval
+Multi-document case analysis
+Secure accounts and encrypted evidence storage
+Broader civic workflows
+🏆 Built for LexHack 2026
 
-The ecosystem health values, biodiversity indicators, species representations and future scenarios shown within the application are illustrative and should not be interpreted as scientific measurements, predictions or environmental assessments.
+CivicShield
 
-The goal is to make environmental change easier to:
+Know what they can do. Know what you can do.
 
-**Visualize → Explore → Understand**
+Built to make legal information easier to understand, verify, and act on.
 
----
+⚖️ Disclaimer
 
-## 🌱 Vision
-
-NatureVault asks:
-
-> What if people could experience environmental change instead of simply reading about it?
-
-By combining:
-
-**3D Exploration + Time-Based Storytelling + Environmental Data + Interactive Discovery**
-
-NatureVault turns environmental change from something people simply read about into something they can step inside.
-
----
-
-### 🌿 NatureVault
-
-*Step inside nature. Travel through time. See what changes.*
+CivicShield provides informational guidance and does not provide legal representation or create an attorney-client relationship. Always consult a qualified legal professional for advice about your specific situation.
